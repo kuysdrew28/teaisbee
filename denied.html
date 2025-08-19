@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Access Denied — TSV Virac</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <style>
+    :root {
+      --primary-orange: #ff7e29;
+      --secondary-orange: #ff9e4d;
+      --dark-gray: #1a1a1a;
+      --light-gray: #f5f5f5;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition-ease: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--dark-gray);
+      border-bottom: 3px solid var(--primary-orange);
+    }
+    .navbar-brand img {
+      filter: drop-shadow(0 0 5px rgba(255, 126, 41, 0.5));
+    }
+    .nav-link {
+      color: white !important;
+      font-weight: 500;
+      transition: var(--transition-ease);
+      padding: 0.5rem 1rem !important;
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-orange);
+      transition: var(--transition-ease);
+      transform: translateX(-50%);
+    }
+    .nav-link:hover::after {
+      width: 80%;
+    }
+    .nav-link.active, .nav-link.active:hover {
+      color: var(--primary-orange) !important;
+    }
+    .navbar-toggler i {
+      color: white;
+    }
+
+    /* Error Page Container */
+    .error-container {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+      padding: 2.5rem;
+      text-align: center;
+      max-width: 450px;
+    }
+
+    .logo-img {
+      max-width: 120px;
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 0 5px rgba(255, 126, 41, 0.5));
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: var(--primary-orange);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #6c757d;
+      margin-bottom: 2rem;
+    }
+
+    .btn-orange {
+      background-color: var(--primary-orange);
+      border-color: var(--primary-orange);
+      color: white;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: var(--transition-ease);
+    }
+    .btn-orange:hover {
+      background-color: #e96a17;
+      border-color: #e96a17;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--dark-gray);
+      color: white;
+      padding: 40px 0;
+    }
+    footer a {
+      color: var(--primary-orange);
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile Adjustments */
+    @media (max-width: 576px) {
+      .card {
+        padding: 2rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .logo-img {
+        max-width: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <img src="image/tsv_logo.png" alt="TSV Virac Logo" height="60" />
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fa-solid fa-bars text-white"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="tsvsuguan.html">Suguan</a></li>
+        <li class="nav-item"><a class="nav-link" href="chatbot.html">Chat Bot</a></li>
+        <li class="nav-item"><a class="nav-link" href="member-panel.html">User Panel</a></li>
+        <li class="nav-item"><a class="nav-link" aria-current="page" href="denied-admin.html">Administrator</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="error-container">
+  <div class="card" role="alert" aria-live="assertive">
+    <img src="image/tsv_logo.png" alt="TSV Logo" class="logo-img" />
+    <h1>Access Denied</h1>
+    <p>You are not allowed to access this page.<br />Please contact the administrator for more info.</p>
+    <a href="login.html" class="btn btn-orange">Try Again!</a>
+  </div>
+</main>
+
+<footer>
+  <div class="container text-center">
+    <p class="mb-0">&copy; KuysDrew Web Development Inc. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
