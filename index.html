@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TSV Virac - Official Digital Hub</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-orange: #ff7e29;
+      --secondary-orange: #ff9e4d;
+      --dark-gray: #1a1a1a;
+      --light-gray: #f5f5f5;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition-ease: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+      color: var(--dark-gray);
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--dark-gray);
+      border-bottom: 3px solid var(--primary-orange);
+    }
+    .navbar-brand img {
+      filter: drop-shadow(0 0 5px rgba(255, 126, 41, 0.5));
+    }
+    .nav-link {
+      color: white !important;
+      font-weight: 500;
+      transition: var(--transition-ease);
+      padding: 0.5rem 1rem !important;
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-orange);
+      transition: var(--transition-ease);
+      transform: translateX(-50%);
+    }
+    .nav-link:hover::after {
+      width: 80%;
+    }
+    .nav-link.active, .nav-link.active:hover {
+      color: var(--primary-orange) !important;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+    }
+    .hero-video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(rgba(26, 26, 26, 0.7), rgba(0, 0, 0, 0.9));
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+      padding: 50px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      animation: fadeIn 1s ease-in-out;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 4.5rem);
+      font-weight: 900;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+      color: white;
+    }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      margin-top: 15px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    .hero-button {
+      margin-top: 25px;
+      padding: 12px 30px;
+      background-color: var(--primary-orange);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: var(--transition-ease);
+      box-shadow: 0 4px 15px rgba(255, 126, 41, 0.4);
+    }
+    .hero-button:hover {
+      background-color: #ff9d4c;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 126, 41, 0.6);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* General Sections */
+    .section-title {
+      font-size: 2.5rem;
+      position: relative;
+      padding-bottom: 10px;
+      margin-bottom: 50px;
+      text-align: center;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background-color: var(--primary-orange);
+      border-radius: 2px;
+    }
+
+    /* About Section */
+    .about-icon-box {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      transition: var(--transition-ease);
+      box-shadow: var(--card-shadow);
+      height: 100%;
+    }
+    .about-icon-box:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    .about-icon-box i {
+      font-size: 3rem;
+      color: var(--primary-orange);
+      margin-bottom: 15px;
+    }
+    .about-icon-box h5 {
+      font-weight: 600;
+    }
+
+    /* Activities Section */
+    .activity-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition-ease);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .activity-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    .activity-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .activity-card:hover img {
+      transform: scale(1.05);
+    }
+    .activity-card-body {
+      padding: 25px;
+    }
+    .activity-card h5 {
+      color: var(--primary-orange);
+      font-weight: 600;
+    }
+    .activity-card p {
+      color: #555;
+    }
+
+    /* Announcements Section */
+    .announcement-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 10px rgba(0,0,0,0.05);
+      margin-bottom: 1rem;
+      transition: var(--transition-ease);
+      text-decoration: none;
+      color: inherit;
+    }
+    .announcement-item:hover {
+      background-color: #fff8f2;
+      transform: translateY(-3px);
+    }
+    .announcement-icon {
+      font-size: 2.5rem;
+      color: var(--primary-orange);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .announcement-content h5 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .announcement-content small {
+      color: #888;
+      font-style: italic;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--dark-gray);
+      color: #bbb;
+      padding: 40px 0;
+    }
+    footer h5 {
+      color: white;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    footer a {
+      color: var(--secondary-orange);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    footer a:hover {
+      color: var(--primary-orange);
+    }
+    .footer-text {
+      color: white; /* Changed from #bbb to white for better visibility */
+    }
+    .social-icons a {
+      color: white;
+      font-size: 1.5rem;
+      margin-right: 15px;
+      transition: color 0.3s;
+    }
+    .social-icons a:hover {
+      color: var(--primary-orange);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+      .hero {
+        height: 80vh;
+      }
+      .hero-content {
+        padding: 30px;
+      }
+      .section-title {
+        font-size: 2rem;
+        margin-bottom: 30px;
+      }
+      .activity-row .col-md-6 {
+        margin-bottom: 1.5rem;
+      }
+      .activity-row.even .activity-text-col,
+      .activity-row.even .activity-img-col {
+        order: initial;
+      }
+      .activity-row.even .activity-text {
+        text-align: left;
+      }
+    }
+  </style>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+
+    const firebaseConfig = {     
+        apiKey: "AIzaSyAwzp3h8tt_tcDF1um--LoroAu1rErMmBc",
+        authDomain: "virac-tsv.firebaseapp.com",
+        projectId: "virac-tsv",
+        storageBucket: "virac-tsv.appspot.com",
+        messagingSenderId: "455316064834",
+        appId: "1:455316064834:web:1dc1033265b58a6c82bbdb"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+
+    const myFullNameEl = document.getElementById('myFullName');
+    const myScheduleTextEl = document.getElementById('myScheduleText');
+    const myScheduleDateTimeTextEl = document.getElementById('myScheduleDateTimeText');
+    const btnTimeIn = document.getElementById('btnTimeIn');
+    const btnTimeOut = document.getElementById('btnTimeOut');
+    const attendanceTbody = document.getElementById('attendanceTbody');
+    const announcementsList = document.getElementById('announcementsList');
+    const fileInput = document.getElementById('fileInput');
+    const btnUploadExcuse = document.getElementById('btnUploadExcuse');
+    const uploadStatus = document.getElementById('uploadStatus');
+    const btnLogout = document.getElementById('btnLogout');
+    const alertContainer = document.getElementById('alertContainer');
+    const excuseReason = document.getElementById('excuseReason');
+
+    function showAlert(msg, type = 'success', timeout = 3500) {
+      const el = document.createElement('div');
+      el.className = `alert alert-${type} animated fadeInDown`;
+      el.textContent = msg;
+      alertContainer.appendChild(el);
+      setTimeout(() => {
+        el.classList.remove('fadeInDown');
+        el.classList.add('fadeOutUp');
+        setTimeout(() => el.remove(), 500);
+      }, timeout);
+    }
+
+    const dayNameToWeekday = { "Linggo": 0, "Lunes": 1, "Martes": 2, "Miyerkules": 3, "Huwebes": 4, "Biyernes": 5, "Sabado": 6 };
+
+    function computeNextScheduleDateTime(scheduleText) {
+      if (!scheduleText) return null;
+      const parts = scheduleText.trim().split(/\s+/);
+      const weekday = dayNameToWeekday[parts[0]];
+      if (weekday === undefined) return null;
+      let hour = 6, minute = 0, ampm = "AM";
+      const m = parts[1]?.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?/i);
+      if (m) { hour = parseInt(m[1]); minute = m[2] ? parseInt(m[2]) : 0; ampm = m[3] ? m[3].toUpperCase() : "AM"; }
+      if (ampm === "PM" && hour < 12) hour += 12;
+      if (ampm === "AM" && hour === 12) hour = 0;
+      const now = new Date();
+      let daysUntil = (weekday - now.getDay() + 7) % 7;
+      const candidate = new Date(now);
+      candidate.setDate(now.getDate() + daysUntil);
+      candidate.setHours(hour, minute, 0, 0);
+      return candidate;
+    }
+
+    function isScheduleToday(schedule) {
+      const now = new Date();
+      const schedDate = (typeof schedule === 'string' && schedule.includes('T')) ? new Date(schedule) : computeNextScheduleDateTime(schedule);
+      return schedDate && schedDate.toDateString() === now.toDateString();
+    }
+
+    function isWithinTwoHoursBefore(schedule) {
+      const sched = (typeof schedule === 'string' && schedule.includes('T')) ? new Date(schedule) : computeNextScheduleDateTime(schedule);
+      const diffHours = (sched - new Date()) / (1000 * 60 * 60);
+      return diffHours <= 2 && diffHours >= 0;
+    }
+
+    async function resetAttendanceWeekly(uid) {
+      const userRef = doc(db, 'users', uid);
+      const snap = await getDoc(userRef);
+      const data = snap.data();
+      const today = new Date();
+      if (today.getDay() === 1 && data.lastReset !== today.toDateString()) {
+        await updateDoc(userRef, { timeIn: null, timeOut: null, lastReset: today.toDateString() });
+      }
+    }
+
+    async function loadAttendanceHistory(uid) {
+      attendanceTbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Loading...</td></tr>';
+      const q = query(collection(db, 'attendance'), where('userId', '==', uid), orderBy('timestamp', 'desc'));
+      const snap = await getDocs(q);
+      attendanceTbody.innerHTML = '';
+      if (snap.empty) { attendanceTbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No records yet.</td></tr>'; return; }
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        const timeText = d.timestamp?.toDate ? d.timestamp.toDate().toLocaleString() : '';
+        attendanceTbody.innerHTML += `<tr><td>${d.date || ''}</td><td>${d.action}</td><td>${timeText}</td></tr>`;
+      });
+    }
+
+    async function doTimeIn(uid) {
+      btnTimeIn.disabled = true;
+      await addDoc(collection(db, 'attendance'), { userId: uid, action: 'timeIn', date: new Date().toLocaleDateString(), timestamp: serverTimestamp() });
+      await updateDoc(doc(db, 'users', uid), { timeIn: new Date().toISOString(), statusAttendance: 'Present' });
+      loadAttendanceHistory(uid);
+      btnTimeOut.disabled = false;
+      showAlert('Pagtanggap recorded');
+    }
+
+    async function doTimeOut(uid) {
+      btnTimeOut.disabled = true;
+      await addDoc(collection(db, 'attendance'), { userId: uid, action: 'timeOut', date: new Date().toLocaleDateString(), timestamp: serverTimestamp() });
+      await updateDoc(doc(db, 'users', uid), { timeOut: new Date().toISOString() });
+      loadAttendanceHistory(uid);
+      showAlert('Time Out recorded');
+    }
+
+    async function uploadExcuse(uid, file, reason) {
+      if (!file) { showAlert('Please choose a file', 'warning'); return; }
+      uploadStatus.textContent = 'Uploading...';
+      const ext = file.name.split('.').pop();
+      const path = `excuse_letters/${uid}/${Date.now()}.${ext}`;
+      const snap = await uploadBytes(ref(storage, path), file);
+      const url = await getDownloadURL(snap.ref);
+      await addDoc(collection(db, 'excuse_letters'), { userId: uid, fileName: file.name, url, reason: reason || '', uploadedAt: serverTimestamp() });
+      uploadStatus.textContent = 'Upload successful.';
+      fileInput.value = '';
+      excuseReason.value = '';
+      setTimeout(() => uploadStatus.textContent = '', 3000);
+    }
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  await resetAttendanceWeekly(user.uid);
+  const userRef = doc(db, 'users', user.uid);
+  const snap = await getDoc(userRef);
+
+  if (!snap.exists()) {
+    showAlert('User not found', 'danger');
+    return;
+  }
+
+  const data = snap.data();
+
+  // 🚫 If user is not admitted, redirect to denied.html
+  if (data.status !== 'admitted') {
+    window.location.href = 'denied.html';
+    return;
+  }
+
+  myFullNameEl.textContent = data.fullName || user.email;
+  myScheduleTextEl.textContent = 'Schedule: ' + (data.schedule || 'No schedule');
+
+  const scheduleDisplay = (data.scheduleDateTime)
+    ? new Date(data.scheduleDateTime)
+    : computeNextScheduleDateTime(data.schedule);
+
+  myScheduleDateTimeTextEl.textContent = scheduleDisplay
+    ? `(${scheduleDisplay.toLocaleString()})`
+    : '';
+
+  btnTimeIn.style.display = isScheduleToday(data.schedule || data.scheduleDateTime)
+    ? 'inline-block'
+    : 'none';
+
+  btnTimeOut.style.display = isWithinTwoHoursBefore(data.schedule || data.scheduleDateTime)
+    ? 'inline-block'
+    : 'none';
+
+  if (data.timeIn) {
+    btnTimeIn.disabled = true;
+    btnTimeOut.disabled = false;
+  }
+
+  await loadAttendanceHistory(user.uid);
+
+  onSnapshot(
+    collection(db, 'announcements'),
+    orderBy('date', 'desc'),
+    snap => {
+      announcementsList.innerHTML = '';
+      if (snap.empty) {
+        announcementsList.innerHTML = '<li class="list-group-item text-center text-muted">No announcements.</li>';
+        return;
+      }
+      snap.forEach(d => {
+        const a = d.data();
+        announcementsList.innerHTML += `
+          <a href="#" class="announcement-item">
+            <div class="announcement-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="announcement-content">
+              <h5>${a.title}</h5>
+              <p>${a.content}</p>
+              <small>Posted on ${a.date}</small>
+            </div>
+          </a>`;
+      });
+    }
+  );
+});
+
+
+    let currentUser = auth.currentUser;
+    btnTimeIn.onclick = () => currentUser && confirm('Confirm Pagtanggap?') && doTimeIn(currentUser.uid);
+    btnTimeOut.onclick = () => currentUser && confirm('Confirm Pagtupad?') && doTimeOut(currentUser.uid);
+    btnUploadExcuse.onclick = () => currentUser && uploadExcuse(currentUser.uid, fileInput.files[0], excuseReason.value.trim());
+    btnLogout.onclick = () => signOut(auth).then(() => window.location.href = 'login.html');
+  </script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <img src="image/tsv_logo.png" alt="TSV Virac Logo" height="60" />
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fa-solid fa-bars text-white"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="tsvsuguan-auto.html">Suguan</a></li>
+        <li class="nav-item"><a class="nav-link" href="resbot.html">Chat Bot</a></li>
+        <li class="nav-item"><a class="nav-link" href="member-panel.html">User Panel</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <video autoplay muted loop playsinline class="hero-video">
+    <source src="video/cover.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="display-3">Welcome to TSV Virac</h1>
+    <p class="lead mt-4">The official digital hub for the Virac Technical Support for Video Streaming Officers — your source for activities, announcements, and updates.</p>
+    <a href="#about-section" class="btn hero-button">Explore More <i class="fa-solid fa-arrow-down ms-2"></i></a>
+  </div>
+</section>
+
+<section id="about-section" class="py-5 bg-white">
+  <div class="container">
+    <h2 class="section-title text-center">About Us</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="about-icon-box">
+          <i class="fa-solid fa-calendar-alt"></i>
+          <h5 class="mt-3">Schedule of Duties</h5>
+          <p class="text-muted">Stay informed and organized — here’s your official schedule of duties</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="about-icon-box">
+          <i class="fa-solid fa-bullhorn"></i>
+          <h5 class="mt-3">Announcements</h5>
+          <p class="text-muted">Keeping TSV officers informed with the latest updates and announcements.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="about-icon-box">
+          <i class="fa-solid fa-robot"></i>
+          <h5 class="mt-3">AI Support</h5>
+          <p class="text-muted">Providing reliable technical assistance for streaming and technical needs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+---
+
+<section id="activities-section" class="py-5">
+  <div class="container">
+    <h2 class="section-title text-center">Activities</h2>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="activity-card">
+          <img src="image/TSVAct2.jpg" alt="TSV Talk and Workshop" class="img-fluid" />
+          <div class="activity-card-body">
+            <h5 class="card-title">TSV Talk and Workshop</h5>
+            <p class="card-text">The TSV Talk and Workshop in Legazpi City, Albay, was attended by TSV officers from the Ecclesiastical District of Catanduanes. This activity enhanced their technical knowledge, particularly in cable management, which is vital for maintaining equipment functionality and longevity.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-5">
+        <div class="activity-card">
+          <img src="image/TSVAct1.jpg" alt="Catanduanes 3rd Place" class="img-fluid" />
+          <div class="activity-card-body">
+            <h5 class="card-title">Catanduanes Takes 3rd Place</h5>
+            <p class="card-text">The District of Catanduanes earned 3rd Place Overall in the workshop activities. This achievement reflects the dedication and competence of the Catanduanes TSV officers, serving as a strong motivation for them to continue performing their duties with enthusiasm.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+---
+
+<section id="announcements-section" class="py-5 bg-white">
+  <div class="container">
+    <h2 class="section-title text-center">Announcements</h2>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div id="announcementsList">
+          <a href="#" class="announcement-item">
+            <div class="announcement-icon"><i class="fa-solid fa-wrench"></i></div>
+            <div class="announcement-content">
+              <h5>TSV Management System Deployment - Version 2</h5>
+              <p>We are pleased to announce the official deployment of Version 2 of the TSV Website on September 1, 2025. This upgrade introduces significant improvements designed to enhance your overall experience, streamline processes, and strengthen system security.</p>
+              <small>Posted on August 18, 2025</small>
+            </div>
+          </a>
+                    <a href="#" class="announcement-item">
+            <div class="announcement-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="announcement-content">
+              <h5>TSV Get Together - September 28, 2025 (Tentative)</h5>
+              <p>All TSV Virac members are required to attend our Anniversary Celebration at ARDCI SkyDeck.</p>
+              <small>Posted on August 25, 2025</small>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+---
+
+<footer class="text-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <h5 class="text-white">TSV Virac Management System</h5>
+<p class="footer-text">&copy; 2025 KuysDrew Web Development Inc. All rights reserved.</p>
+   <a href="privacy.html" class="btn btn-link text-decoration-none">Privacy Policy & Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel - Attendance Summary</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <style>
+    :root {
+      --primary-orange: #ff7e29;
+      --secondary-orange: #ff9e4d;
+      --dark-gray: #1a1a1a;
+      --light-gray: #f5f5f5;
+      --bg-dark: #121212;
+      --text-light: #e0e0e0;
+      --card-bg: #1e1e1e;
+      --transition-ease: 0.3s ease;
+    }
+    body {
+      background-color: var(--bg-dark);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-light);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Watermark */
+    body::before {
+      content: "Virac- TSV";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      font-size: 15vw;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.05);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .navbar {
+      background: var(--dark-gray);
+      border-bottom: 3px solid var(--primary-orange);
+      transition: var(--transition-ease);
+    }
+    .navbar-brand img {
+      filter: drop-shadow(0 0 8px var(--primary-orange));
+    }
+    .nav-link {
+      color: var(--text-light) !important;
+      font-weight: 500;
+      transition: var(--transition-ease);
+      padding: 0.5rem 1rem !important;
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-orange);
+      transition: var(--transition-ease);
+      transform: translateX(-50%);
+    }
+    .nav-link:hover::after, .nav-link.active::after {
+      width: 80%;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary-orange) !important;
+    }
+    
+    h1 {
+      text-align: center;
+      color: var(--primary-orange);
+      margin-top: 2rem;
+    }
+
+    .button-container {
+      text-align: center;
+      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .action-button, .action-button-active {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: var(--secondary-orange);
+      color: var(--dark-gray);
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    .action-button:hover, .action-button-active:hover {
+      background-color: var(--primary-orange);
+    }
+    .action-button-active {
+      background-color: var(--primary-orange);
+      color: var(--dark-gray);
+    }
+
+    .controls-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      align-items: center;
+      padding: 20px 0;
+    }
+    .controls-container label {
+      color: var(--text-light);
+    }
+    .controls-container select, .controls-container button {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+      background-color: var(--dark-gray);
+      color: var(--text-light);
+      border: 1px solid var(--primary-orange);
+      border-radius: 6px;
+    }
+    .controls-container select:focus, .controls-container button:focus {
+      outline: none;
+      box-shadow: 0 0 5px var(--primary-orange);
+    }
+    .controls-container button {
+      width: auto;
+      background-color: var(--primary-orange);
+      color: var(--dark-gray);
+      font-weight: bold;
+    }
+    .controls-container button:hover {
+      background-color: var(--secondary-orange);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: var(--card-bg);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    }
+    th, td {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background-color: var(--primary-orange);
+      color: var(--dark-gray);
+      font-weight: bold;
+    }
+    tr {
+      transition: background-color 0.3s ease;
+    }
+    tr:hover {
+      background-color: rgba(255, 126, 41, 0.05);
+    }
+    tr:nth-child(even) {
+      background-color: var(--dark-gray);
+    }
+
+    footer {
+      background-color: var(--dark-gray);
+      color: var(--text-light);
+      padding: 40px 0;
+      margin-top: auto;
+      text-align: center;
+    }
+    footer img {
+      width: 160px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 8px var(--primary-orange));
+    }
+    footer p {
+      color: var(--text-light);
+      margin: 0;
+    }
+    .footer-links {
+      margin-top: 10px;
+    }
+    .footer-links a {
+      color: var(--primary-orange);
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+    .footer-links a:hover {
+      color: var(--secondary-orange);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="image/tsv_logo.png" alt="TSV Virac Logo" height="60" />
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fa-solid fa-bars text-white"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html">Suguan</a></li>
+          <li class="nav-item"><a class="nav-link" href="chatbot.html">Chat Bot</a></li>
+          <li class="nav-item"><a class="nav-link" href="announcement.html">Announcement</a></li>
+          <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+          <li class="nav-item"><a class="nav-link" href="user.html">My Schedule</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="login1.html">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<div class="container my-5 flex-grow-1">
+  <div class="button-container">
+    <a href="assign.html" class="action-button">Manage Users</a>
+    <a href="status.html" class="action-button-active">TSV Status</a>
+    <a href="survey/admin-survey.html" class="action-button">Schedule</a>
+    <a href="TSV Form 3.xlsx" class="action-button">Download TSV Form 3</a>
+    <a href="Attendance/admin.html" class="action-button">Attendance</a>
+  </div>
+    
+    <h1>Attendance Summary</h1>
+
+    <div class="controls-container">
+      <div>
+        <label for="weekSelect" style="display: block; text-align: center;">Select Week:</label>
+        <select id="weekSelect">
+                      <option value="wk25">wk25</option>
+            <option value="wk26">wk26</option>
+            <option value="wk27">wk27</option>
+            <option value="wk28">wk28</option>
+            <option value="wk29">wk29</option>
+            <option value="wk30">wk30</option>
+            <option value="wk31">wk31</option>
+            <option value="wk32">wk32</option>
+            <option value="wk33">wk33</option>
+            <option value="wk34">wk34</option>
+            <option value="wk35">wk35</option>
+            <option value="wk36">wk36</option>
+            <option value="wk37">wk37</option>
+            <option value="wk38">wk38</option>
+            <option value="wk39">wk39</option>
+            <option value="wk40">wk40</option>
+            <option value="wk41">wk41</option>
+            <option value="wk42">wk42</option>
+            <option value="wk43">wk43</option>
+            <option value="wk44">wk44</option>
+            <option value="wk45">wk45</option>
+        </select>
+      </div>
+      <div>
+        <label for="pageSelect" style="display: block; text-align: center;">Go to Suguan:</label>
+        <div style="display: flex; gap: 10px;">
+          <select id="pageSelect">
+            <option value="">-- Select a week --</option>
+            <option value="wk26">wk26</option>
+            <option value="wk27">wk27</option>
+            <option value="wk28">wk28</option>
+            <option value="wk29">wk29</option>
+            <option value="wk30">wk30</option>
+            <option value="wk31">wk31</option>
+            <option value="wk32">wk32</option>
+            <option value="wk33">wk33</option>
+            <option value="wk34">wk34</option>
+            <option value="wk35">wk35</option>
+            <option value="wk36">wk36</option>
+            <option value="wk37">wk37</option>
+            <option value="wk38">wk38</option>
+            <option value="wk39">wk39</option>
+            <option value="wk40">wk40</option>
+            <option value="wk41">wk41</option>
+            <option value="wk42">wk42</option>
+            <option value="wk43">wk43</option>
+            <option value="wk44">wk44</option>
+            <option value="wk45">wk45</option>
+          </select>
+          <button id="goButton">Go</button>
+        </div>
+      </div>
+    </div>
+
+    <table id="attendanceTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Pagtanggap</th>
+          <th>Pagtupad</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        </tbody>
+    </table>
+  </div>
+  
+<footer>
+  <div class="container text-center">
+    <p class="footer-text mb-0">&copy; 2025 KuysDrew Web Development Inc. All rights reserved.</p>
+   <a href="privacy.html" class="btn btn-link text-decoration-none">Privacy Policy & Terms of Service</a>
+  </div>
+</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAwzp3h8tt_tcDF1um--LoroAu1rErMmBc",
+      authDomain: "virac-tsv.firebaseapp.com",
+      projectId: "virac-tsv",
+      storageBucket: "virac-tsv.appspot.com",
+      messagingSenderId: "455316064834",
+      appId: "1:455316064834:web:1dc1033265b58a6c82bbdb"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const weekSelect = document.getElementById("weekSelect");
+    const tableBody = document.getElementById("attendanceTable").getElementsByTagName("tbody")[0];
+
+    function loadAttendanceData(collectionName) {
+      tableBody.innerHTML = "<tr><td colspan='5'>Loading...</td></tr>";
+
+      db.collection(collectionName).get()
+        .then((querySnapshot) => {
+          tableBody.innerHTML = "";
+
+          if (querySnapshot.empty) {
+            tableBody.innerHTML = "<tr><td colspan='5'>No records found for " + collectionName + ".</td></tr>";
+            return;
+          }
+
+          querySnapshot.forEach((doc) => {
+            const name = doc.id;
+            const data = doc.data();
+
+            const row = tableBody.insertRow();
+            row.insertCell(0).textContent = name;
+            row.insertCell(1).textContent = data.assignedTime || data.date || "N/A";
+
+            // Show checkmark if time exists
+            row.insertCell(2).textContent = data.timeIn ? "✔️" : "";
+            row.insertCell(3).textContent = data.timeOut ? "✔️" : "";
+
+            // Determine status
+            let statusSymbol = "";
+            const hasOut = !!data.timeOut;
+            const now = new Date();
+
+            let scheduleDateTime;
+            if (data.assignedTime) {
+              scheduleDateTime = new Date(data.assignedTime.replace(" ", "T"));
+            } else if (data.date) {
+              scheduleDateTime = new Date(data.date);
+            }
+
+            if (hasOut) {
+              statusSymbol = "✔️";
+            } else {
+              if (scheduleDateTime && now > scheduleDateTime) {
+                statusSymbol = "❌"; // Missed time out after schedule
+              } else {
+                statusSymbol = "⚠️"; // Schedule not yet passed
+              }
+            }
+
+            row.insertCell(4).textContent = statusSymbol;
+          });
+        })
+        .catch((error) => {
+          console.error("Error retrieving attendance:", error);
+          tableBody.innerHTML = "<tr><td colspan='5'>Error loading data.</td></tr>";
+        });
+    }
+
+    loadAttendanceData(weekSelect.value);
+    weekSelect.addEventListener("change", () => {
+      loadAttendanceData(weekSelect.value);
+    });
+
+    document.getElementById("goButton").addEventListener("click", function() {
+      const selectedWeek = document.getElementById("pageSelect").value;
+      if (selectedWeek) {
+        window.location.href = `suguan/${selectedWeek}.html`;
+      } else {
+        alert("Please select a week to go.");
+      }
+    });
+  </script>
+</body>
+</html>
