@@ -192,19 +192,19 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const scheduleMap = {
-  "2025-08-20T06:00:00": "Miyerkules 6:00AM",
-  "2025-08-21T06:00:00": "Huwebes 6:00AM",
-  "2025-08-21T19:00:00": "Huwebes 7:30PM",
-  "2025-08-23T06:00:00": "Sabado 6:00AM",
-  "2025-08-24T06:00:00": "Sabado 6:00AM",
-  "2025-08-24T08:00:00": "Linggo 8:00AM",
-  "2025-08-24T10:00:00": "Linggo 10:00AM"
+  "2025-08-27T06:00:00": "Miyerkules 6:00AM",
+  "2025-08-28T06:00:00": "Huwebes 6:00AM",
+  "2025-08-28T19:00:00": "Huwebes 7:30PM",
+  "2025-08-30T06:00:00": "Sabado 6:00AM",
+  "2025-08-31T06:00:00": "Linggo 6:00AM",
+  "2025-08-31T08:00:00": "PNK 8:00AM",
+  "2025-08-31T10:00:00": "Linggo 10:00AM"
 };
 
 // Group schedules under labels
 const scheduleGroups = {
   "MIDWEEK - PAGSAMBA": ["Miyerkules 6:00AM", "Huwebes 6:00AM", "Huwebes 7:30PM"],
-  "WEEKEND - PAGSAMBA": ["Sabado6:00AM", "Linggo 6:00AM", "Linggo 8:00AM", "Linggo 10:00AM"],
+  "WEEKEND - PAGSAMBA": ["Sabado 6:00AM", "Linggo 6:00AM", "PNK 8:00AM", "Linggo 10:00AM"],
 
 };
 
@@ -269,6 +269,7 @@ loadSchedules();
 </body>
 
 </html>
+
 
 
 
