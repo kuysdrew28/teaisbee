@@ -220,7 +220,7 @@ const scheduleGroups = {
 };
 
 async function loadSchedules() {
-  const querySnapshot = await getDocs(collection(db, "wk35"));
+  const querySnapshot = await getDocs(collection(db, "wk34"));
   const scheduleContainer = document.getElementById("scheduleContainer");
   scheduleContainer.innerHTML = "";
 
@@ -266,11 +266,11 @@ async function loadSchedules() {
 }
 
 window.timeIn = async function(name) {
-  await updateDoc(doc(db, "wk35", name), { timeIn: new Date().toISOString() });
+  await updateDoc(doc(db, "wk34", name), { timeIn: new Date().toISOString() });
   loadSchedules();
 };
 window.timeOut = async function(name) {
-  await updateDoc(doc(db, "wk35", name), { timeOut: new Date().toISOString() });
+  await updateDoc(doc(db, "wk34", name), { timeOut: new Date().toISOString() });
   loadSchedules();
 };
 
@@ -280,6 +280,7 @@ loadSchedules();
 </body>
 
 </html>
+
 
 
 
