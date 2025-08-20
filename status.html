@@ -174,12 +174,10 @@
       </button>
       <div class="collapse navbar-collapse" id="navMenu">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="index.html">Suguan</a></li>
-          <li class="nav-item"><a class="nav-link" href="chatbot.html">Chat Bot</a></li>
-          <li class="nav-item"><a class="nav-link" href="announcement.html">Announcement</a></li>
-          <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
-          <li class="nav-item"><a class="nav-link" href="user.html">My Schedule</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="tsvsuguan-auto.html">Suguan</a></li>
+          <li class="nav-item"><a class="nav-link" href="resbot.html">Chat Bot</a></li>
+          <li class="nav-item"><a class="nav-link" href="member-panel.html">My Schedule</a></li>
           <li class="nav-item"><a class="nav-link active" aria-current="page" href="login1.html">Admin</a></li>
         </ul>
       </div>
@@ -497,6 +495,7 @@
       renderTable(currentRows);
     }
 
+    
     async function loadWeek(weekNo){
       // Cleanup previous subscription
       if (unsubscribe){ unsubscribe(); unsubscribe = null; }
@@ -593,7 +592,10 @@
 
     // First load
     loadWeek(currentWeek);
+
+    
   </script>
+
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
