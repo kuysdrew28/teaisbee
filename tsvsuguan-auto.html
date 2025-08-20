@@ -238,7 +238,7 @@ async function loadSchedules() {
                 <thead><tr><th class="name-col">Name</th><th class="actions-col">Actions</th></tr></thead><tbody>`;
       grouped[schedule].forEach(member => {
         if (member.absent) {
-          html += `<tr><td class="name-col">${member.name}</td><td class="actions-col"><button class="btn btn-absent w-100">Absent</button></td></tr>`;
+          html += `<tr><td class="name-col">${member.name}</td><td class="actions-col"><button class="btn btn-absent w-100">❌Absent</button></td></tr>`;
         } else if (!member.timeIn) {
           html += `<tr><td class="name-col">${member.name}</td><td class="actions-col"><button class="btn btn-timein w-100" onclick="timeIn('${member.name}')">Pagtanggap</button></td></tr>`;
         } else if (!member.timeOut) {
@@ -269,6 +269,7 @@ loadSchedules();
 </body>
 
 </html>
+
 
 
 
