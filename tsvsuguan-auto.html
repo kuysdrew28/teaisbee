@@ -111,7 +111,8 @@
     .btn-timeout:hover { background-color: #ffc27f; }
     .btn-absent { background-color: #b3261e; border: none; color: white; }
     .btn-absent:hover { background-color: #d13d3d; }
-    
+    .btn-present { background-color: #05d438; border: none; color: white; }
+    .btn-present:hover { background-color: #32ed77; }
     .text-center small { color: rgba(255, 255, 255, 0.6); }
     
     /* New styles for fixed column widths */
@@ -243,7 +244,7 @@ async function loadSchedules() {
         } else if (!member.timeOut) {
           html += `<tr><td class="name-col">${member.name}</td><td class="actions-col"><button class="btn btn-timeout w-100" onclick="timeOut('${member.name}')">Pagtupad</button></td></tr>`;
         } else {
-          html += `<tr><td class="name-col">${member.name}</td><td class="actions-col">✅ Completed</td></tr>`;
+          html += `<tr><td class="name-col">${member.name}</td><td class="actions-col"><button class="btn btn-present w-100">✅Completed</button></td></tr>`;
         }
       });
       html += "</tbody></table></div>";
@@ -268,6 +269,7 @@ loadSchedules();
 </body>
 
 </html>
+
 
 
 
