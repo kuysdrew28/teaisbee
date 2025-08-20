@@ -353,6 +353,7 @@
       <option value="KATHLYN TATING">KATHLYN TATING</option>
       <option value="KEITH MANUEL ESPARAS">KEITH MANUEL ESPARAS</option>
       <option value="RENZO MANUEL ESPARAS">RENZO MANUEL ESPARAS</option>
+            <option value="MEDELIZA OLINO">MEDELIZA OLINO</option>
       <option value="MICAH FERNANDEZ">MICAH FERNANDEZ</option>
       <option value="ROI VINCENT TUGAY">ROI VINCENT TUGAY</option>
       <option value="RONNIE BERINO">RONNIE BERINO</option>
@@ -459,6 +460,7 @@ function toggleMenu() {
       "JHESTER OGALESCO" : "1113",
       "KATHLYN TATING" : "1234",
       "KEITH MANUEL ESPARAS" : "0607",
+            "MEDELIZA OLINO" : "0905",
       "MARK ANDREW ERISARE" : "0328",
       "MICAH FERNANDEZ" : "1234",
       "RENZO MANUEL ESPARAS" : "0712",
@@ -512,7 +514,7 @@ function toggleMenu() {
         return;
       }
 
-      const docRef = doc(db, "wk33", name);
+      const docRef = doc(db, "wk35", name);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -556,7 +558,7 @@ function toggleMenu() {
         return;
       }
 
-      const docRef = doc(db, "wk33", name);
+      const docRef = doc(db, "wk35", name);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
