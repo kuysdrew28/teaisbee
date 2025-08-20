@@ -4,340 +4,123 @@
   <meta charset="UTF-8">
   <title>TSV Virac - My Schedule</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    /* CSS Variables for a modern dark & orange theme */
     :root {
-      --primary-orange: #ff7300; /* A vibrant, modern orange */
-      --primary-orange-dark: #ff7300;
-      --bg-dark: #121212; /* Very dark background */
-      --bg-card: #1e1e1e; /* Slightly lighter for panels */
-      --text-light: #e0e0e0; /* Light gray text */
-      --border-dark: #333; /* Darker border for contrast */
+      --primary-orange: #ff7300;
+      --primary-orange-dark: #cc5c00;
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --text-light: #e0e0e0;
+      --border-dark: #333;
       --success: #28a745;
       --danger: #dc3545;
       --font-family: 'Poppins', sans-serif;
     }
 
-    
-
     body {
       font-family: var(--font-family);
-      padding: 0;
-      margin: 0;
       background-color: var(--bg-dark);
       color: var(--text-light);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-
-           /* Watermark background */
-        background-image:
-
-            url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='150'><text x='50%' y='50%' font-size='40' fill='rgba(255,255,255,0.05)' font-family='Poppins' text-anchor='middle' dominant-baseline='middle' transform='rotate(-30,150,75)'>Virac TSV</text></svg>");
-        background-repeat: repeat;
-        background-size: 300px 150px;
+      position: relative;
     }
 
-    header {
+    body::before {
+      content: "Virac TSV";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      font-size: 15vw;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.05);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .navbar {
       background-color: var(--bg-card);
-      padding: 15px 30px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 2px solid var(--primary-orange);
+      border-bottom: 3px solid var(--primary-orange);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
+    .navbar-brand img { width: 130px; filter: drop-shadow(0 0 8px var(--primary-orange)); }
+    .nav-link { font-weight: 600; font-size: 16px; color: var(--text-light) !important; }
 
-    .logo img {
-      width: 130px;
-    }
+    main { padding-top: 2rem; padding-bottom: 2rem; flex-grow: 1; }
+    h1 { color: var(--primary-orange); font-weight: 700; font-size: 2.5rem; text-align: center; }
+    h2, p { text-align: center; color: #b0b0b0; }
 
-    .nav {
-      display: flex;
-      gap: 15px;
-    }
-
-    .nav a {
-      font-weight: 600;
-      font-size: 16px;
-      padding: 10px 15px;
-      text-decoration: none;
-      color: var(--text-light);
-      border-radius: 8px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .nav a.active,
-    .nav a:hover {
-      background-color: var(--primary-orange);
-      color: var(--bg-dark);
-    }
-
-    .nav button {
-      background-color: var(--danger);
-      padding: 10px 15px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: none;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .nav button:hover {
-      background-color: #a32a37; /* Darker red */
-    }
-
-    h1, h2, p {
-      text-align: center;
-      margin: 1em 0 0.5em;
-    }
-
-    h1 {
-      color: var(--primary-orange);
-      font-weight: 700;
-      font-size: 2.5rem;
-    }
-
-    h2 {
-      font-weight: 400;
-      font-size: 1.2rem;
-      color: #b0b0b0;
-    }
-    
     #panel {
-      max-width: 500px;
-      margin: 20px auto;
       background: var(--bg-card);
       padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-      animation: fadeIn 0.5s ease-in-out;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
     }
 
-    label {
-      display: block;
-      margin-top: 20px;
-      font-weight: 600;
-      color: var(--text-light);
-      font-size: 1rem;
-    }
-
-    select, input[type="password"] {
+    .btn-custom {
       width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border-dark);
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-      font-size: 1rem;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
+      padding: 15px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s ease;
     }
-
-    select:focus, input:focus {
-      border-color: var(--primary-orange);
-      outline: none;
-      box-shadow: 0 0 8px rgba(255, 145, 0, 0.4);
-    }
-    
-    option {
-        background-color: var(--bg-card);
-    }
+    #loadBtn { background-color: var(--primary-orange); color: var(--bg-dark); }
+    #loadBtn:hover { background-color: var(--primary-orange-dark); }
+    #timeInBtn { background-color: var(--success); color: white; border: none; }
+    #timeInBtn:hover { background-color: #218838; }
+    .btn-absent { background-color: var(--danger); color: white; border: none; cursor: not-allowed; }
 
     .info {
       margin-top: 25px;
       font-size: 1rem;
-      padding: 15px;
+      padding: 20px;
       background-color: var(--bg-dark);
       border-radius: 10px;
       border: 1px dashed var(--primary-orange);
     }
+    .info span { display: block; margin-bottom: 5px; }
 
-    .info span {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: 400;
-    }
-
-    .info strong {
-      font-weight: 600;
-      color: var(--primary-orange);
-    }
-
-    .info #scheduleTime,
-    .info #inStatus,
-    .info #outStatus {
-      font-weight: 600;
-      color: var(--text-light);
-    }
-    
-    .info #inStatus, .info #outStatus {
-      font-size: 1.2rem;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 20px;
-      padding: 15px;
-      border: none;
-      border-radius: 10px;
-      color: var(--bg-dark);
-      font-weight: bold;
-      font-size: 1.1rem;
-      cursor: pointer;
-      background-color: var(--primary-orange);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
-    }
-    
-    #timeInBtn {
-        background-color: #007bff; /* A nice blue for the action button */
-        color: white;
-    }
-    
-    #timeInBtn:hover {
-        background-color: #0056b3;
-    }
-
-    button:hover {
-      background-color: var(--primary-orange-dark);
-      transform: translateY(-2px);
-    }
-
-    button:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 999;
-      inset: 0;
-      background-color: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-content {
-      background-color: var(--bg-card);
-      padding: 30px;
-      width: 90%;
-      max-width: 400px;
-      border-radius: 16px;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-      text-align: center;
-      transform: scale(0.95);
-      animation: modalFadeIn 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    }
-
-    .modal-content p {
-      font-size: 1.2rem;
-      color: var(--text-light);
-    }
-
-    .modal-content button {
-      background-color: var(--primary-orange);
-      color: var(--bg-dark);
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    /* Mobile Menu */
-@media (max-width: 768px) {
-  .menu-button-wrapper {
-    display: flex !important;
-  }
-
-  .menu-toggle {
-    display: block;
-    background: none;
-    border: none;
-    font-size: 26px;
-    cursor: pointer;
-    color: var(--text-dark);
-  }
-
-  .nav {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 10px;
-    background: rgb(65, 63, 63);
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    overflow: hidden;
-  }
-
-  .nav.show {
-    display: flex;
-    animation: fadeIn 0.3s ease-in-out;
-  }
-
-  .nav a, .nav button {
-    padding: 12px;
-    border-top: 1px solid #ddd;
-    width: 100%;
-    text-align: left;
-  }
-}
-
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+    footer { background-color: var(--bg-card); color: var(--text-light); padding: 20px 0; text-align: center; }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <img src="image/tsv_logo.png" alt="TSV Logo">
-  </div>
-  
-    <!-- Mobile menu button -->
-    <div class="menu-button-wrapper">
-      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="image/tsv_logo.png" alt="TSV Logo">
+      </a>
+      <div class="collapse navbar-collapse" id="navbarMenu">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="tsvsuguan-auto.html">Suguan</a></li>
+          <li class="nav-item"><a class="nav-link" href="resbot.html">Chat Bot</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="member-panel.html">My Schedule</a></li>
+        </ul>
+      </div>
     </div>
-
- 
-  <nav class="nav" id="navbarMenu">
-    <a href="index.html">Home</a>
-    <a href="tsvsuguan-auto.html">Suguan</a>
-    <a href="resbot.html">Chat Bot</a>
-    <a href="member-panel.html" class="active">My Schedule</a>
   </nav>
 </header>
 
-<main>
+<main class="container">
   <h1>My Schedule</h1>
   <h2>Technical Support for VideoStreaming</h2>
   <p>Locale of Virac</p>
 
-  <div id="panel">
-    <label for="user">Select Your Name:</label>
-    <select id="user">
-      <option value="">-- Choose Name --</option>
+  <div id="panel" class="mx-auto">
+    <div class="mb-3">
+      <label for="user" class="form-label">Select Your Name:</label>
+      <select id="user" class="form-select">
+        <option value="">-- Choose Name --</option>
       <option value="MARK ANDREW ERISARE">MARK ANDREW ERISARE</option>
       <option value="ALLAN HARLEM KRYSLER CADABA">ALLAN HARLEM KRYSLER CADABA</option>
       <option value="ANDREA ESTRELLADO">ANDREA ESTRELLADO</option>
@@ -361,42 +144,33 @@
       <option value="SHAELLA OGALESCO">SHAELLA O. OGALESCO</option>
       <option value="SHIRRA MAE FERNANDEZ">SHIRRA MAE FERNANDEZ</option>
       <option value="VENDRED EVANGELISTA">VENDRED EVANGELISTA</option>
-    </select>
+        <!-- ... (other names here) ... -->
+      </select>
+    </div>
 
-    <label for="pin">Enter PIN:</label>
-    <input type="password" id="pin" placeholder="Your PIN" />
+    <button id="loadBtn" class="btn btn-custom">Load Schedule</button>
 
-    <button id="loadBtn">Load Schedule</button>
-
-    <div class="info" id="userInfo" style="display: none;">
+    <div class="info" id="userInfo" style="display:none;">
       <span><strong>Assigned Schedule:</strong> <span id="scheduleTime">---</span></span>
       <span><strong>Pagtanggap:</strong> <span id="inStatus">---</span></span>
       <span><strong>Pagtupad:</strong> <span id="outStatus">---</span></span>
       <div id="message"></div>
-      <button id="timeInBtn">Pagtanggap</button>
+      <div id="actionBtnWrapper">
+        <button id="timeInBtn" class="btn btn-custom">Pagtanggap</button>
+      </div>
     </div>
   </div>
 </main>
 
-<div id="popupModal" class="modal">
-  <div class="modal-content">
-    <p id="popupMessage">Mag check ng group chat para sa mas detalyadong schedule.</p>
-    <button id="closeModalBtn">OK</button>
-  </div>
-</div>
+<footer>
+  <p>&copy; 2025 kuysdrew Dev. All rights reserved.</p>
+</footer>
 
-<audio id="alertSound" src="alert.mp3" preload="auto"></audio>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
 
-<!-- Firebase Auth Protection Script -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-
-<script>
-
-function toggleMenu() {
-    const nav = document.getElementById("navbarMenu");
-    nav.classList.toggle("show");
-  }
   const firebaseConfig = {
     apiKey: "AIzaSyAwzp3h8tt_tcDF1um--LoroAu1rErMmBc",
     authDomain: "virac-tsv.firebaseapp.com",
@@ -406,192 +180,131 @@ function toggleMenu() {
     appId: "1:455316064834:web:1dc1033265b58a6c82bbdb"
   };
 
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-  // Redirect to login page if not authenticated
-  auth.onAuthStateChanged((user) => {
-    if (!user) {
-      alert("You must be logged in to access this page.");
-      window.location.href = "login.html";
+  const userSelect = document.getElementById("user");
+  const loadBtn = document.getElementById("loadBtn");
+  const timeInBtn = document.getElementById("timeInBtn");
+  const userInfo = document.getElementById("userInfo");
+  const scheduleTime = document.getElementById("scheduleTime");
+  const inStatus = document.getElementById("inStatus");
+  const outStatus = document.getElementById("outStatus");
+  const actionBtnWrapper = document.getElementById("actionBtnWrapper");
+
+  function formatScheduleTime(timestamp) {
+    if (!timestamp) return "No schedule";
+    const date = new Date(timestamp.seconds ? timestamp.seconds * 1000 : timestamp);
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date);
+  }
+
+  loadBtn.addEventListener("click", async () => {
+    const name = userSelect.value.trim();
+    if (!name) {
+      alert("Please select your name.");
+      return;
+    }
+
+    const docRef = doc(db, "wk34", name);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      userInfo.style.display = "block";
+
+      scheduleTime.textContent = formatScheduleTime(data.assignedTime);
+      inStatus.textContent = data.timeIn ? "✔️" : "❌";
+      outStatus.textContent = data.timeOut ? "✔️" : "❌";
+
+      // 🔹 Check absent flag
+      if (data.absent === true) {
+        actionBtnWrapper.innerHTML = `<button class="btn btn-custom btn-absent" disabled>ABSENT</button>`;
+      } else {
+        actionBtnWrapper.innerHTML = `<button id="timeInBtn" class="btn btn-custom">Pagtanggap</button>`;
+        document.getElementById("timeInBtn").addEventListener("click", async () => {
+          const now = new Date();
+          await setDoc(docRef, { timeIn: now }, { merge: true });
+          inStatus.textContent = "✔️";
+          alert("Pagtanggap recorded!");
+        });
+      }
+    } else {
+      alert("No schedule found for this name.");
     }
   });
 
-function toggleMenu() {
-  const nav = document.getElementById("navbarMenu");
-  nav.classList.toggle("show");
+  const timeOutBtn = document.getElementById("timeOutBtn");
+
+function checkTimeForTimeout(assignedTime, timeIn, timeOut) {
+  const now = new Date();
+  const assigned = new Date(assignedTime);
+
+  // Condition 1: If no TimeIn or TimeOut and assigned time has passed → ABSENT
+  if (!timeIn && !timeOut && now > assigned) {
+    inStatus.textContent = "ABSENT";
+    outStatus.textContent = "ABSENT";
+    return false; // no timeout button
+  }
+
+  // Condition 2: If 2 hours before assignedTime → show timeout button
+  const twoHoursBefore = new Date(assigned.getTime() - 2 * 60 * 60 * 1000);
+  if (now >= twoHoursBefore && now <= assigned && timeIn && !timeOut) {
+    timeOutBtn.style.display = "inline-block";
+  } else {
+    timeOutBtn.style.display = "none";
+  }
 }
 
-  function logout() {
-    firebase.auth().signOut()
-      .then(() => {
-        alert("You have been logged out.");
-        window.location.href = "login.html";
-      })
-      .catch((error) => {
-        alert("Logout failed: " + error.message);
-      });
+// Listen to Load button
+loadBtn.addEventListener("click", async () => {
+  const name = userSelect.value.trim();
+  if (!name) {
+    showPopup("Please select your name.");
+    return;
   }
-</script>
 
-  <script type="module">
- 
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
-    
+  const docRef = doc(db, "wk34", name);
+  const docSnap = await getDoc(docRef);
 
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    userInfo.style.display = "block";
 
+    const assignedTime = data.assignedTime;
+    scheduleTime.textContent = formatScheduleTime(assignedTime);
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    inStatus.textContent = data.timeIn ? "✔️" : "❌";
+    outStatus.textContent = data.timeOut ? "✔️" : "❌";
 
-    const studentPasswords = {
-      "ALLAN HARLEM KRYSLER CADABA" : "1234",
-      "ANDREA ESTRELLADO":"0124",
-      "ANJENETTE MANALO":"0214",
-      "ANGEL MAE VALENZUELA":"0422",
-      "CRISTINE ANGELA ICARO":"3333",
-         "SHAELLA OGALESCO":"1030",
-      "AVEENA MARIE BAUSIN":"0901",
-      "EDGAR PANTI II":"0507",
-      "FIONA MAGDARAOG" : "0903",
-      "FRANCIS MAGDAONG" : "0211",
-      "GENEVA VARGAS" : "0304",
-      "JHESTER OGALESCO" : "1113",
-      "KATHLYN TATING" : "1234",
-      "KEITH MANUEL ESPARAS" : "0607",
-            "MEDELIZA OLINO" : "0905",
-      "MARK ANDREW ERISARE" : "0328",
-      "MICAH FERNANDEZ" : "1234",
-      "RENZO MANUEL ESPARAS" : "0712",
-      "ROI VINCENT TUGAY" : "0714",
-      "RONNIE BERINO" : "0719",
-      "ROGER TUGAY" : "0323",
-      "SHIRRA MAE FERNANDEZ" : "0903",
-      "VENDRED EVANGELISTA" : "1234"
-    };
+    // Check for timeout visibility or ABSENT
+    checkTimeForTimeout(assignedTime, data.timeIn, data.timeOut);
 
-    const userSelect = document.getElementById("user");
-    const pinInput = document.getElementById("pin");
-    const loadBtn = document.getElementById("loadBtn");
-    const timeInBtn = document.getElementById("timeInBtn");
-    const userInfo = document.getElementById("userInfo");
-
-    const scheduleTime = document.getElementById("scheduleTime");
-    const inStatus = document.getElementById("inStatus");
-    const outStatus = document.getElementById("outStatus");
-    const message = document.getElementById("message");
-
-    const modal = document.getElementById("popupModal");
-    const popupMessage = document.getElementById("popupMessage");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    const alertSound = document.getElementById("alertSound");
-
-    function showModal(text) {
-      popupMessage.textContent = text;
-      modal.style.display = "block";
-      alertSound.play();
-    }
-
-    closeModalBtn.onclick = () => modal.style.display = "none";
-    window.onclick = (event) => {
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    };
-
-    loadBtn.addEventListener("click", async () => {
-      const name = userSelect.value.trim();
-      const enteredPin = pinInput.value.trim();
-
-      if (!name || !enteredPin) {
-        showModal("Please select name and enter PIN.");
-        return;
-      }
-
-      if (studentPasswords[name] !== enteredPin) {
-        showModal("Incorrect PIN!");
-        return;
-      }
-
-      const docRef = doc(db, "wk34", name);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        userInfo.style.display = "block";
-
-        if (data.assignedTime) {
-          const assignedDate = new Date(data.assignedTime);
-          const options = {
-            weekday: "long",
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true
-          };
-          scheduleTime.textContent = new Intl.DateTimeFormat("en-US", options).format(assignedDate);
-        } else {
-          scheduleTime.textContent = "No schedule";
-        }
-
-        inStatus.textContent = data.timeIn ? "✔️" : "❌";
-        outStatus.textContent = data.timeOut ? "✔️" : "❌";
-      } else {
-        showModal("No schedule found for this name.");
-      }
-    });
-
-
-
-
-    timeInBtn.addEventListener("click", async () => {
-      const name = userSelect.value.trim();
-      const enteredPin = pinInput.value.trim();
-
-      if (!name || !enteredPin) {
-        showModal("Please select name and enter PIN.");
-        return;
-      }
-
-      if (studentPasswords[name] !== enteredPin) {
-        showModal("Incorrect PIN!");
-        return;
-      }
-
-      const docRef = doc(db, "wk34", name);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const now = new Date();
-        const updateData = { timeIn: now };
-           btn.disabled = true;
-
-        try {
-          await setDoc(docRef, updateData, { merge: true });
-          showModal("Recorded successfully.");
-          inStatus.textContent = "✔️";
-             btn.disabled = true;
-        } catch (error) {
-          showModal("Failed to");
-          console.error("Error:", error);
-        }
-      } else {
-        showModal("No schedule found for this name.");
-      }
-    });
-
-
-
-  
-  </script>
-</body>
-<script>
-  function toggleMenu() {
-    const nav = document.getElementById("navbarMenu");
-    nav.classList.toggle("show");
+  } else {
+    showPopup("No schedule found for this name.");
   }
-</script>
+});
 
+// Time Out button action
+timeOutBtn.addEventListener("click", async () => {
+  const name = userSelect.value.trim();
+  if (!name) {
+    showPopup("Please select your name.");
+    return;
+  }
+
+  const docRef = doc(db, "wk34", name);
+  const now = new Date();
+  await setDoc(docRef, { timeOut: now }, { merge: true });
+  outStatus.textContent = "✔️";
+  showPopup("✅ Pagtupad recorded!");
+  timeOutBtn.style.display = "none";
+});
+
+</script>
 </body>
 </html>
-
