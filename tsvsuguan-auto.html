@@ -266,27 +266,14 @@ window.timeOut = async function(name) {
 
 loadSchedules();
 
+
+  
  onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = 'login.html';
     return;
   }
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = 'login.html';
-    return;
-  }
 
-  await resetAttendanceWeekly(user.uid);
-  const userRef = doc(db, 'users', user.uid);
-  const snap = await getDoc(userRef);
-
-  if (!snap.exists()) {
-    showAlert('User not found', 'danger');
-    return;
-  }
-
-  const data = snap.data();
 
   // 🚫 If user is not admitted, redirect to denied.html
   if (data.status !== 'admitted') {
@@ -298,6 +285,7 @@ onAuthStateChanged(auth, async (user) => {
 </body>
 
 </html>
+
 
 
 
