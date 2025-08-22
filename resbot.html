@@ -237,6 +237,9 @@
        <a href="privacy.html" class="btn btn-link text-decoration-none">Privacy Policy & Terms of Service</a>
   </div>
 </footer>
+  <!-- Botpress Inject Scripts -->
+  <script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2025/08/22/06/20250822063030-NCUYH9BC.js" defer></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -488,7 +491,48 @@
 
   let currentUser=auth.currentUser;
 
-  
+   window.botpressWebChat.init({
+      composerPlaceholder: "Type your message...",
+      botName: "TSV Assistant",
+      botAvatarUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Philippine_Christian_University_logo.png/600px-Philippine_Christian_University_logo.png", // Replace with TSV logo
+      enableTranscriptDownload: false,
+      theme: "dark",
+      themeColor: "#f97316", // Orange highlight
+      stylesheet: `
+        .bpw-header {
+          background-color: #111827 !important;
+          border-bottom: 2px solid #f97316 !important;
+        }
+        .bpw-composer {
+          background-color: #1f2937 !important;
+          border-top: 2px solid #f97316 !important;
+        }
+        .bpw-from-bot .bpw-message-bubble {
+          background-color: #f97316 !important;
+          color: #fff !important;
+        }
+        .bpw-from-user .bpw-message-bubble {
+          background-color: #374151 !important;
+          color: #fff !important;
+        }
+        .bpw-floating-button {
+          background-color: #f97316 !important;
+        }
+      `
+    });
+
+    // Open the chat window and send greeting when loaded
+    window.addEventListener("load", () => {
+      window.botpressWebChat.sendEvent({ type: "show" });
+
+      // Small delay so widget loads before greeting
+      setTimeout(() => {
+        window.botpressWebChat.sendPayload({
+          type: "text",
+          text: "Hi! I’m TSV Assistant 👋 How can I help you today?"
+        });
+      }, 800);
+    });
 </script>
 
 </body>
