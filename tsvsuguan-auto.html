@@ -266,28 +266,39 @@ window.timeOut = async function(name) {
 
 loadSchedules();
 
-      // Check login state
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("Logged in:", user.email);
-        document.getElementById("content").style.display = "block"; 
-      } else {
-        console.log("Not logged in, redirecting...");
-        window.location.href = "login.html";  // redirect to login page
-      }
-    });
+ onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
 
-    // Logout function
-    window.doLogout = () => {
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      });
-    }
+  await resetAttendanceWeekly(user.uid);
+  const userRef = doc(db, 'users', user.uid);
+  const snap = await getDoc(userRef);
+
+  if (!snap.exists()) {
+    showAlert('User not found', 'danger');
+    return;
+  }
+
+  const data = snap.data();
+
+  // 🚫 If user is not admitted, redirect to denied.html
+  if (data.status !== 'admitted') {
+    window.location.href = 'denied.html';
+    return;
+  }
 
 </script>
 </body>
 
 </html>
+
 
 
 
