@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TSV ChatBot Widget</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #chatbox { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; }
+    .user { color: blue; }
+    .bot { color: green; }
+    #userInput { width: 80%; padding: 8px; }
+    #sendBtn { padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <h2>TSV ChatBot</h2>
+  <div id="chatbox"></div>
+  <input type="text" id="userInput" placeholder="Type your message here" />
+  <button id="sendBtn">Send</button>
+
+  <script>
+    const chatbox = document.getElementById("chatbox");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      const sessionHash = Math.random().toString(36).substring(2, 15);
+      chatbox.innerHTML += `<div class="user"><b>You:</b> ${message}</div>`;
+      userInput.value = "";
+
+      try {
+        // POST user message
+        const postRes = await fetch("https://kuysdrew-TSVChatBot.hf.space/call/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ data: [message], session_hash: sessionHash })
+        });
+        const postJson = await postRes.json();
+        const eventId = postJson.event_id;
+
+        // GET response stream
+        const evtSource = new EventSource(
+          `https://kuysdrew-TSVChatBot.hf.space/call/predict/${eventId}`
+        );
+        evtSource.onmessage = ({ data }) => {
+          if (!data.startsWith("event")) return;
+          const [prefix, payload] = data.split("\n");
+          if (prefix.includes("data:")) {
+            const reply = JSON.parse(payload.replace(/^data: /, ""));
+            chatbox.innerHTML += `<div class="bot"><b>Bot:</b> ${reply[0]}</div>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+            if (prefix.includes("event: complete")) {
+              evtSource.close();
+            }
+          }
+        };
+      } catch (err) {
+        console.error(err);
+        chatbox.innerHTML += `<div class="bot"><b>Bot:</b> Error reaching the API.</div>`;
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    userInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>
