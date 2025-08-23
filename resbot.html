@@ -237,6 +237,7 @@
        <a href="privacy.html" class="btn btn-link text-decoration-none">Privacy Policy & Terms of Service</a>
   </div>
 </footer>
+
   <!-- Botpress Inject Scripts -->
   <script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js"></script>
   <script src="https://files.bpcontent.cloud/2025/08/22/06/20250822063030-NCUYH9BC.js" defer></script>
@@ -484,6 +485,21 @@
     });
   });
 
+   // ✅ Protect Chatbot page
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    const userRef = doc(db, "users", user.uid);
+    const snap = await getDoc(userRef);
+
+    if (!snap.exists() || snap.data().status !== "admitted") {
+      alert("Access denied. You must be admitted to use this page.");
+      window.location.href = "login.html";
+    }
+  });
   btnTimeIn.onclick=()=>currentUser&&confirm('Confirm Pagtanggap?')&&doTimeIn(currentUser.uid);
   btnTimeOut.onclick=()=>currentUser&&confirm('Confirm Time Out?')&&doTimeOut(currentUser.uid);
   btnUploadExcuse.onclick=()=>currentUser&&uploadExcuse(currentUser.uid,fileInput.files[0],excuseReason.value.trim());
