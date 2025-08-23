@@ -39,15 +39,40 @@
       padding: 5px;
     }
     button {
-      background: #ff7e29;
       border: none;
       border-radius: 6px;
       padding: 6px 12px;
       font-weight: bold;
       cursor: pointer;
     }
-    button:hover {
+    .assignBtn {
+      background: #ff7e29;
+      color: #1a1a1a;
+    }
+    .assignBtn:hover {
       background: #ff9e4d;
+    }
+    .removeBtn {
+      background: #6c757d;
+      color: #fff;
+    }
+    .removeBtn:hover {
+      background: #8a9ba8;
+    }
+    .deleteBtn {
+      background: #dc3545;
+      color: #fff;
+    }
+    .deleteBtn:hover {
+      background: #e85c6b;
+    }
+    .add-user {
+      background: #28a745;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .add-user:hover {
+      background: #45c96e;
     }
   </style>
 </head>
@@ -55,7 +80,37 @@
 
 <div class="container">
   <h1>Assign Schedule</h1>
-<p>wk35</p>
+
+  <!-- Week selector -->
+  <div class="mb-3 text-center">
+    <label class="fw-bold me-2">Select Week Database:</label>
+    <select id="weekSelect" class="form-select d-inline-block w-auto">
+      <option value="">-- Choose Week --</option>
+      <option value="wk35">wk35</option>
+      <option value="wk36">wk36</option>
+      <option value="wk37">wk37</option>
+      <option value="wk38">wk38</option>
+           <option value="wk38">wk39</option>
+           <option value="wk38">wk40</option>
+           <option value="wk38">wk41</option>
+           <option value="wk38">wk42</option>
+           <option value="wk38">wk43</option>
+           <option value="wk38">wk44</option>
+           <option value="wk38">wk45</option>
+           <option value="wk38">wk46</option>
+           <option value="wk38">wk47</option>
+           <option value="wk38">wk48</option>
+           <option value="wk38">wk49</option>
+           <option value="wk38">wk50</option>
+    </select>
+  </div>
+
+  <!-- Add User Button -->
+  <div class="d-flex justify-content-end mb-3">
+    <button id="addUserBtn" class="add-user btn">➕ Add User</button>
+  </div>
+
+  <!-- Table -->
   <div class="table-responsive">
     <table class="table table-dark table-striped align-middle">
       <thead>
@@ -63,19 +118,21 @@
           <th>Name</th>
           <th>Schedule</th>
           <th>Action</th>
+          <th>Delete</th>
         </tr>
       </thead>
-      <tbody id="assignTable">
-        <!-- Rows will be generated dynamically -->
-      </tbody>
+      <tbody id="assignTable"></tbody>
     </table>
   </div>
   <div id="status" class="text-center fw-bold mt-3"></div>
 </div>
 
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
+  import { 
+    getFirestore, collection, onSnapshot, doc, setDoc, addDoc, deleteDoc 
+  } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAwzp3h8tt_tcDF1um--LoroAu1rErMmBc",
@@ -89,70 +146,185 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const names = [
-    "MARK ANDREW ERISARE","ALLAN HARLEM KRYSLER CADABA","ANDREA ESTRELLADO","ANGEL MAE VALENZUELA",
-    "ANJENETTE MANALO","AVEENA MARIE BAUSIN","CRISTINE ANGELA ICARO","EDGAR PANTI II",
-    "FIONA MAGDARAOG","FRANCIS MAGDAONG","GENEVA VARGAS","JHESTER OGALESCO","KATHLYN TATING",
-    "KEITH MANUEL ESPARAS","RENZO MANUEL ESPARAS","MEDELIZA OLINO","MICAH FERNANDEZ",
-    "ROI VINCENT TUGAY","RONNIE BERINO","ROGER TUGAY","SHAELLA O. OGALESCO",
-    "SHIRRA MAE FERNANDEZ","VENDRED EVANGELISTA"
+  // =========================
+  // TIMES (exact as requested)
+  // =========================
+  // weekday index: 0=Mon ... 6=Sun
+  const baseSchedules = [
+    { label:"Wednesday 6:00 AM",   weekday: 2, hour: 6,  minute: 0  }, // Wed
+    { label:"Thursday 6:00 AM",    weekday: 3, hour: 6,  minute: 0  }, // Thu
+    { label:"Thursday 7:30 PM",    weekday: 3, hour: 19, minute: 30 }, // Thu 7:30 PM
+    { label:"Saturday 6:00 AM",    weekday: 5, hour: 6,  minute: 0  }, // Sat
+    { label:"Sunday 6:00 AM",      weekday: 6, hour: 6,  minute: 0  }, // Sun
+    { label:"PNK 8:00 AM",         weekday: 6, hour: 8,  minute: 0  }, // Sun
+    { label:"Sunday 10:00 AM",     weekday: 6, hour: 10, minute: 0  }, // Sun
   ];
 
-  const schedules = [
-    {label:"Wednesday 6:00 AM", value:"2025-08-27T06:00:00"},
-    {label:"Thursday 6:00 AM", value:"2025-08-28T06:00:00"},
-    {label:"Thursday 7:00 PM", value:"2025-08-28T19:00:00"},
-    {label:"Saturday 6:00 AM", value:"2025-08-30T06:00:00"},
-    {label:"Sunday 6:00 AM", value:"2025-08-31T06:00:00"},
-    {label:"Sunday 10:00 AM", value:"2025-08-31T10:00:00"},
-    {label:"PNK Sunday 8:00 AM", value:"2025-08-31T08:00:00"},
-    {label:"Pamamahayag 7:00 PM", value:"2025-08-29T19:00:00"}
-  ];
+  // ---------- helpers ----------
+  function pad(n){ return String(n).padStart(2,"0"); }
+
+  // Format as LOCAL YYYY-MM-DDTHH:MM:SS (no timezone suffix)
+  function formatLocal(date){
+    return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}` +
+           `T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  }
+
+  // Monday (00:00 local) of ISO week in the current year
+  function getISOMondayOfWeekLocal(week, year){
+    // ISO week 1 is the week with Jan 4; get its Monday in LOCAL time
+    const jan4 = new Date(year, 0, 4);
+    const day = jan4.getDay() === 0 ? 7 : jan4.getDay(); // 1..7 (Mon..Sun)
+    const mondayWeek1 = new Date(jan4);
+    mondayWeek1.setDate(jan4.getDate() - (day - 1));
+    mondayWeek1.setHours(0,0,0,0);
+    const mondayTarget = new Date(mondayWeek1);
+    mondayTarget.setDate(mondayWeek1.getDate() + (week - 1) * 7);
+    return mondayTarget;
+  }
+
+  function generateSchedulesForWeek(weekNum){
+    const year = new Date().getFullYear();
+    const monday = getISOMondayOfWeekLocal(weekNum, year); // local midnight
+    return baseSchedules.map(s=>{
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + s.weekday);
+      d.setHours(s.hour, s.minute, 0, 0);
+      return { label: s.label, value: formatLocal(d) };
+    });
+  }
+
+  // ---------- state ----------
+  let weekCollection = "";
+  let schedules = [];
+  let participants = [];
 
   const tableBody = document.getElementById("assignTable");
   const statusDiv = document.getElementById("status");
+  const addUserBtn = document.getElementById("addUserBtn");
+  const weekSelect = document.getElementById("weekSelect");
 
-  // Generate rows
-  names.forEach(name => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${name}</td>
-      <td>
-        <select class="form-select schedule-select">
-          <option value="">-- Select --</option>
-          ${schedules.map(s => `<option value="${s.value}">${s.label}</option>`).join('')}
-        </select>
-      </td>
-      <td><button class="assignBtn btn-sm">Assign</button></td>
-    `;
-    tableBody.appendChild(tr);
+  // ---------- UI render ----------
+  function renderTable(){
+    tableBody.innerHTML = "";
+    participants.sort((a,b)=> (a.name || "").localeCompare(b.name || ""));
 
-    const button = tr.querySelector(".assignBtn");
-    const select = tr.querySelector(".schedule-select");
+    participants.forEach(({ id, name })=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${name || ""}</td>
+        <td>
+          <select class="form-select schedule-select">
+            <option value="">-- Select --</option>
+            ${schedules.map(s => `<option value="${s.value}">${s.label}</option>`).join("")}
+          </select>
+        </td>
+        <td>
+          <button class="assignBtn btn-sm btn" style="background:#ff7e29;color:#1a1a1a;">Assign</button>
+          <button class="removeBtn btn-sm btn ms-1" style="background:#6c757d;color:#fff;">Remove</button>
+        </td>
+        <td><button class="deleteBtn btn-sm btn" style="background:#dc3545;color:#fff;">Delete</button></td>
+      `;
+      tableBody.appendChild(tr);
 
-    button.addEventListener("click", async () => {
-      const datetime = select.value;
-      if (!datetime) {
-        statusDiv.textContent = "⚠ Please select a schedule for " + name;
-        statusDiv.style.color = "orange";
-        return;
-      }
+      const assignBtn = tr.querySelector(".assignBtn");
+      const removeBtn = tr.querySelector(".removeBtn");
+      const deleteBtn = tr.querySelector(".deleteBtn");
+      const select = tr.querySelector(".schedule-select");
 
-      try {
-        await setDoc(doc(db, 'wk35', name), {
-          assignedTime: datetime
-        }, { merge: true });
+      assignBtn.addEventListener("click", async ()=>{
+        if(!weekCollection){
+          statusDiv.textContent = "⚠ Please select a week database first.";
+          statusDiv.style.color = "orange";
+          return;
+        }
+        const datetime = select.value;
+        if(!datetime){
+          statusDiv.textContent = `⚠ Please select a schedule for ${name}`;
+          statusDiv.style.color = "orange";
+          return;
+        }
+        try{
+          await setDoc(doc(db, weekCollection, name), { assignedTime: datetime }, { merge:true });
+          statusDiv.textContent = `✅ Assigned ${name} to ${datetime} in ${weekCollection}`;
+          statusDiv.style.color = "lightgreen";
+        }catch(err){
+          statusDiv.textContent = `❌ Error: ${err.message}`;
+          statusDiv.style.color = "red";
+        }
+      });
 
-        const displayTime = new Date(datetime).toLocaleString();
-        statusDiv.textContent = `✅ Assigned ${name} to ${displayTime}`;
-        statusDiv.style.color = "lightgreen";
-      } catch (error) {
-        statusDiv.textContent = `❌ Error: ${error.message}`;
-        statusDiv.style.color = "red";
-      }
+      removeBtn.addEventListener("click", async ()=>{
+        if(!weekCollection){
+          statusDiv.textContent = "⚠ Please select a week database first.";
+          statusDiv.style.color = "orange";
+          return;
+        }
+        if(confirm(`Remove assigned schedule for ${name}?`)){
+          try{
+            await setDoc(doc(db, weekCollection, name), { assignedTime: null }, { merge:true });
+            statusDiv.textContent = `🗑 Removed schedule for ${name} in ${weekCollection}`;
+            statusDiv.style.color = "yellow";
+          }catch(err){
+            statusDiv.textContent = `❌ Error: ${err.message}`;
+            statusDiv.style.color = "red";
+          }
+        }
+      });
+
+      deleteBtn.addEventListener("click", async ()=>{
+        if(confirm(`Delete participant "${name}"?`)){
+          try{
+            await deleteDoc(doc(db, "seminar_participants", id));
+            statusDiv.textContent = `🗑 Deleted ${name}`;
+            statusDiv.style.color = "red";
+          }catch(err){
+            statusDiv.textContent = `❌ Error: ${err.message}`;
+            statusDiv.style.color = "red";
+          }
+        }
+      });
     });
+  }
+
+  // ---------- week selector ----------
+  weekSelect.addEventListener("change", e=>{
+    weekCollection = e.target.value; // e.g., "wk36"
+    if(weekCollection){
+      const weekNum = parseInt(weekCollection.replace("wk",""), 10);
+      schedules = generateSchedulesForWeek(weekNum);
+      statusDiv.textContent = `📌 Active Database: ${weekCollection}`;
+      statusDiv.style.color = "lightblue";
+      renderTable(); // refresh dropdown options with new dates
+    }else{
+      schedules = [];
+      statusDiv.textContent = "⚠ No week selected";
+      statusDiv.style.color = "orange";
+      renderTable();
+    }
+  });
+
+  // ---------- realtime participants ----------
+  onSnapshot(collection(db, "seminar_participants"), snap=>{
+    participants = [];
+    snap.forEach(s => participants.push({ id: s.id, ...s.data() }));
+    renderTable();
+  });
+
+  // ---------- add user ----------
+  addUserBtn.addEventListener("click", async ()=>{
+    const newName = prompt("Enter new participant name:");
+    if(!newName) return;
+    try{
+      await addDoc(collection(db, "seminar_participants"), { name: newName });
+      statusDiv.textContent = `✅ Added ${newName}`;
+      statusDiv.style.color = "lightgreen";
+    }catch(err){
+      statusDiv.textContent = `❌ Error: ${err.message}`;
+      statusDiv.style.color = "red";
+    }
   });
 </script>
+
 
 </body>
 </html>
