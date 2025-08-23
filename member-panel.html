@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
@@ -19,30 +21,10 @@
       --danger: #dc3545;
       --font-family: 'Poppins', sans-serif;
     }
-
-    body {
-      font-family: var(--font-family);
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      position: relative;
-    }
-
-    body::before {
-      content: "Virac TSV";
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-45deg);
-      font-size: 15vw;
-      font-weight: 800;
-      color: rgba(255, 255, 255, 0.05);
-      z-index: -1;
-      pointer-events: none;
-    }
-
+body { background:#121212; color:#eee; font-family: 'Poppins', sans-serif; }
+    h1 { color:#ff7300; font-weight:700; text-align:center; }
+    h2, h3 { text-align:center; }
+    
     .navbar {
       background-color: var(--bg-card);
       border-bottom: 3px solid var(--primary-orange);
@@ -50,50 +32,17 @@
     }
     .navbar-brand img { width: 130px; filter: drop-shadow(0 0 8px var(--primary-orange)); }
     .nav-link { font-weight: 600; font-size: 16px; color: var(--text-light) !important; }
+    .btn-custom { width:100%; padding:15px; border-radius:10px; font-weight:bold; }
+    #loadBtn { background:#ff7300; color:#121212; }
+    #timeInBtn { background:#28a745; color:white; border:none; }
+    .btn-absent { background:#dc3545; color:white; border:none; cursor:not-allowed; }
+    .bg-dark { background: #1b1b1b !important; }
+        footer { background-color: var(--bg-card); color: var(--text-light); padding: 20px 0; text-align: center; }
 
-    main { padding-top: 2rem; padding-bottom: 2rem; flex-grow: 1; }
-    h1 { color: var(--primary-orange); font-weight: 700; font-size: 2.5rem; text-align: center; }
-    h2, p { text-align: center; color: #b0b0b0; }
-
-    #panel {
-      background: var(--bg-card);
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .btn-custom {
-      width: 100%;
-      padding: 15px;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 1.1rem;
-      cursor: pointer;
-      margin-top: 15px;
-      transition: 0.3s ease;
-    }
-    #loadBtn { background-color: var(--primary-orange); color: var(--bg-dark); }
-    #loadBtn:hover { background-color: var(--primary-orange-dark); }
-    #timeInBtn { background-color: var(--success); color: white; border: none; }
-    #timeInBtn:hover { background-color: #218838; }
-    .btn-absent { background-color: var(--danger); color: white; border: none; cursor: not-allowed; }
-
-    .info {
-      margin-top: 25px;
-      font-size: 1rem;
-      padding: 20px;
-      background-color: var(--bg-dark);
-      border-radius: 10px;
-      border: 1px dashed var(--primary-orange);
-    }
-    .info span { display: block; margin-bottom: 5px; }
-
-    footer { background-color: var(--bg-card); color: var(--text-light); padding: 20px 0; text-align: center; }
   </style>
 </head>
 <body>
-
-<header>
+  <header>
   <nav class="navbar navbar-expand-lg">
     <div class="container">
       <a class="navbar-brand" href="index.html">
@@ -110,58 +59,32 @@
     </div>
   </nav>
 </header>
-
-<main class="container">
+<main class="container mt-4">
   <h1>My Schedule</h1>
   <h2>Technical Support for VideoStreaming</h2>
-  <p>Locale of Virac</p>
+  <p class="text-center">Locale of Virac</p>
+  <h3 id="currentWeek" class="mt-3 text-warning"></h3>
 
-  <div id="panel" class="mx-auto">
+  <div id="panel" class="mx-auto bg-dark p-4 rounded mt-4" style="max-width:700px;">
     <div class="mb-3">
       <label for="user" class="form-label">Select Your Name:</label>
       <select id="user" class="form-select">
         <option value="">-- Choose Name --</option>
-      <option value="MARK ANDREW ERISARE">MARK ANDREW ERISARE</option>
-      <option value="ALLAN HARLEM KRYSLER CADABA">ALLAN HARLEM KRYSLER CADABA</option>
-      <option value="ANDREA ESTRELLADO">ANDREA ESTRELLADO</option>
-      <option value="ANGEL MAE VALENZUELA">ANGEL MAE VALENZUELA</option>
-      <option value="ANJENETTE MANALO">ANJENETTE MANALO</option>
-      <option value="AVEENA MARIE BAUSIN">AVEENA MARIE BAUSIN</option>
-      <option value="CRISTINE ANGELA ICARO">CRISTINE ANGELA ICARO</option>
-      <option value="EDGAR PANTI II">EDGAR PANTI II</option>
-      <option value="FIONA MAGDARAOG">FIONA MAGDARAOG</option>
-      <option value="FRANCIS MAGDAONG">FRANCIS MAGDAONG</option>
-      <option value="GENEVA VARGAS">GENEVA VARGAS</option>
-      <option value="JHESTER OGALESCO">JHESTER OGALESCO</option>
-      <option value="KATHLYN TATING">KATHLYN TATING</option>
-      <option value="KEITH MANUEL ESPARAS">KEITH MANUEL ESPARAS</option>
-      <option value="RENZO MANUEL ESPARAS">RENZO MANUEL ESPARAS</option>
-            <option value="MEDELIZA OLINO">MEDELIZA OLINO</option>
-      <option value="MICAH FERNANDEZ">MICAH FERNANDEZ</option>
-      <option value="ROI VINCENT TUGAY">ROI VINCENT TUGAY</option>
-      <option value="RONNIE BERINO">RONNIE BERINO</option>
-      <option value="ROGER TUGAY">ROGER TUGAY</option>
-      <option value="SHAELLA OGALESCO">SHAELLA O. OGALESCO</option>
-      <option value="SHIRRA MAE FERNANDEZ">SHIRRA MAE FERNANDEZ</option>
-      <option value="VENDRED EVANGELISTA">VENDRED EVANGELISTA</option>
-        <!-- ... (other names here) ... -->
       </select>
     </div>
-
     <button id="loadBtn" class="btn btn-custom">Load Schedule</button>
 
-    <div class="info" id="userInfo" style="display:none;">
-      <span><strong>Assigned Schedule:</strong> <span id="scheduleTime">---</span></span>
-      <span><strong>Pagtanggap:</strong> <span id="inStatus">---</span></span>
+    <div class="info mt-4" id="userInfo" style="display:none;">
+      <span><strong>Assigned Schedule:</strong> <span id="scheduleTime">---</span></span><br>
+      <span><strong>Pagtanggap:</strong> <span id="inStatus">---</span></span><br>
       <span><strong>Pagtupad:</strong> <span id="outStatus">---</span></span>
-      <div id="message"></div>
-      <div id="actionBtnWrapper">
+      <div id="actionBtnWrapper" class="mt-3">
         <button id="timeInBtn" class="btn btn-custom">Pagtanggap</button>
+        <button id="timeOutBtn" class="btn btn-secondary" style="display:none;">Pagtupad</button>
       </div>
     </div>
   </div>
 </main>
-
 <footer class="text-center">
   <div class="container">
     <div class="row">
@@ -173,11 +96,11 @@
     </div>
   </div>
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
+  import {
+    getFirestore, collection, getDocs, doc, getDoc, setDoc, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAwzp3h8tt_tcDF1um--LoroAu1rErMmBc",
@@ -193,16 +116,35 @@
 
   const userSelect = document.getElementById("user");
   const loadBtn = document.getElementById("loadBtn");
-  const timeInBtn = document.getElementById("timeInBtn");
   const userInfo = document.getElementById("userInfo");
   const scheduleTime = document.getElementById("scheduleTime");
   const inStatus = document.getElementById("inStatus");
   const outStatus = document.getElementById("outStatus");
-  const actionBtnWrapper = document.getElementById("actionBtnWrapper");
+  const timeOutBtn = document.getElementById("timeOutBtn");
+  const currentWeekEl = document.getElementById("currentWeek");
 
-  function formatScheduleTime(timestamp) {
-    if (!timestamp) return "No schedule";
-    const date = new Date(timestamp.seconds ? timestamp.seconds * 1000 : timestamp);
+  // ✅ ISO Week (Mon-Sun)
+  function getISOWeekNumber(d = new Date()) {
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+  }
+  function getCurrentWeekCollection() {
+    return "wk" + getISOWeekNumber();
+  }
+
+  // ✅ Show current week
+  const currentWeekName = getCurrentWeekCollection();
+  currentWeekEl.textContent = "Current Week: " + currentWeekName;
+
+  // ✅ Format Firestore timestamp
+  function formatScheduleTime(ts) {
+    if (!ts) return "No schedule";
+    let date;
+    if (ts.seconds) date = new Date(ts.seconds * 1000);
+    else date = new Date(ts);
+    if (isNaN(date)) return "Invalid date";
     return new Intl.DateTimeFormat("en-US", {
       weekday: "long",
       hour: "numeric",
@@ -211,108 +153,49 @@
     }).format(date);
   }
 
+  // ✅ Populate dropdown from seminar_participants (use name as value)
+  async function loadParticipants() {
+    const querySnapshot = await getDocs(collection(db, "seminar_participants"));
+    querySnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      if (data.name) {
+        const option = document.createElement("option");
+        option.value = data.name;  // 👈 value must be the name
+        option.textContent = data.name;
+        userSelect.appendChild(option);
+      }
+    });
+  }
+  loadParticipants();
+
+  // ✅ Load schedule for selected name
   loadBtn.addEventListener("click", async () => {
     const name = userSelect.value.trim();
-    if (!name) {
-      alert("Please select your name.");
-      return;
-    }
+    if (!name) { alert("Please select your name."); return; }
 
-    const docRef = doc(db, "wk34", name);
+    const collectionName = getCurrentWeekCollection();
+    console.log("Looking under:", collectionName, "docId:", name);
+
+    const docRef = doc(db, collectionName, name); // 👈 doc id is the name
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const data = docSnap.data();
       userInfo.style.display = "block";
-
       scheduleTime.textContent = formatScheduleTime(data.assignedTime);
       inStatus.textContent = data.timeIn ? "✔️" : "❌";
       outStatus.textContent = data.timeOut ? "✔️" : "❌";
 
-      // 🔹 Check absent flag
-      if (data.absent === true) {
-        actionBtnWrapper.innerHTML = `<button class="btn btn-custom btn-absent" disabled>ABSENT</button>`;
-      } else {
-        actionBtnWrapper.innerHTML = `<button id="timeInBtn" class="btn btn-custom">Pagtanggap</button>`;
-        document.getElementById("timeInBtn").addEventListener("click", async () => {
-          const now = new Date();
-          await setDoc(docRef, { timeIn: now }, { merge: true });
-          inStatus.textContent = "✔️";
-          alert("Pagtanggap recorded!");
-        });
-      }
+      document.getElementById("timeInBtn").onclick = async () => {
+        await setDoc(docRef, { timeIn: serverTimestamp() }, { merge: true });
+        inStatus.textContent = "✔️";
+        alert("Pagtanggap recorded!");
+      };
+
     } else {
-      alert("No schedule found for this name.");
+      alert("No schedule found for this name in " + collectionName);
     }
   });
-
-  const timeOutBtn = document.getElementById("timeOutBtn");
-
-function checkTimeForTimeout(assignedTime, timeIn, timeOut) {
-  const now = new Date();
-  const assigned = new Date(assignedTime);
-
-  // Condition 1: If no TimeIn or TimeOut and assigned time has passed → ABSENT
-  if (!timeIn && !timeOut && now > assigned) {
-    inStatus.textContent = "ABSENT";
-    outStatus.textContent = "ABSENT";
-    return false; // no timeout button
-  }
-
-  // Condition 2: If 2 hours before assignedTime → show timeout button
-  const twoHoursBefore = new Date(assigned.getTime() - 2 * 60 * 60 * 1000);
-  if (now >= twoHoursBefore && now <= assigned && timeIn && !timeOut) {
-    timeOutBtn.style.display = "inline-block";
-  } else {
-    timeOutBtn.style.display = "none";
-  }
-}
-
-// Listen to Load button
-loadBtn.addEventListener("click", async () => {
-  const name = userSelect.value.trim();
-  if (!name) {
-    showPopup("Please select your name.");
-    return;
-  }
-
-  const docRef = doc(db, "wk34", name);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    const data = docSnap.data();
-    userInfo.style.display = "block";
-
-    const assignedTime = data.assignedTime;
-    scheduleTime.textContent = formatScheduleTime(assignedTime);
-
-    inStatus.textContent = data.timeIn ? "✔️" : "❌";
-    outStatus.textContent = data.timeOut ? "✔️" : "❌";
-
-    // Check for timeout visibility or ABSENT
-    checkTimeForTimeout(assignedTime, data.timeIn, data.timeOut);
-
-  } else {
-    showPopup("No schedule found for this name.");
-  }
-});
-
-// Time Out button action
-timeOutBtn.addEventListener("click", async () => {
-  const name = userSelect.value.trim();
-  if (!name) {
-    showPopup("Please select your name.");
-    return;
-  }
-
-  const docRef = doc(db, "wk34", name);
-  const now = new Date();
-  await setDoc(docRef, { timeOut: now }, { merge: true });
-  outStatus.textContent = "✔️";
-  showPopup("✅ Pagtupad recorded!");
-  timeOutBtn.style.display = "none";
-});
-
 </script>
 </body>
 </html>
