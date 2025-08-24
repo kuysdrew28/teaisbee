@@ -6,15 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
     :root {
       --primary-orange: #ff7300;
-      --primary-orange-dark: #cc5c00;
       --bg-dark: #121212;
       --bg-card: #1e1e1e;
       --text-light: #e0e0e0;
-      --border-dark: #333;
       --success: #28a745;
       --danger: #dc3545;
       --font-family: 'Poppins', sans-serif;
@@ -22,48 +19,18 @@
     body { background:#121212; color:#eee; font-family: 'Poppins', sans-serif; }
     h1 { color:#ff7300; font-weight:700; text-align:center; }
     h2, h3 { text-align:center; }
-    .navbar { background-color: var(--bg-card); border-bottom: 3px solid var(--primary-orange); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-    .navbar-brand img { width: 130px; filter: drop-shadow(0 0 8px var(--primary-orange)); }
-    .nav-link { font-weight: 600; font-size: 16px; color: var(--text-light) !important; }
+    .navbar { background-color: var(--bg-card); border-bottom: 3px solid var(--primary-orange); }
     .btn-custom { width:100%; padding:15px; border-radius:10px; font-weight:bold; }
     #loadBtn { background:#ff7300; color:#121212; }
     #timeInBtn { background:#28a745; color:white; border:none; }
-    .btn-absent { background:#dc3545; color:white; border:none; cursor:not-allowed; }
+    #timeOutBtn { background:#007bff; color:white; border:none; }
+    .btn-absent { background:#dc3545; color:white; border:none; cursor:not-allowed; width:100%; padding:15px; border-radius:10px; font-weight:bold; }
+    .btn-completed { background:#28a745; color:white; border:none; cursor:not-allowed; width:100%; padding:15px; border-radius:10px; font-weight:bold; }
     .bg-dark { background: #1b1b1b !important; }
     footer { background-color: var(--bg-card); color: var(--text-light); padding: 20px 0; text-align: center; }
   </style>
 </head>
 <body>
-<!-- Popup Overlay -->
-<div id="schedulePopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; display:flex; justify-content:center; align-items:center; text-align:center; color:white; padding:20px;">
-  <div style="background:#1e1e1e; padding:30px; border-radius:15px; max-width:500px; box-shadow:0 0 20px rgba(255,126,41,0.5);">
-    <div class="d-flex flex-column align-items-center">
-      <div class="spinner-border text-warning mb-3" role="status" style="width:3rem; height:3rem;">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-      <h1 style="color:#ff7e29;">Under Maintenance</h1>
-      <p>
-      Please contact system administrator for more info.</p>
-    </div>
-  </div>
-</div>
-  <header>
-  <nav class="navbar navbar-expand-lg">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">
-        <img src="image/tsv_logo.png" alt="TSV Logo">
-      </a>
-      <div class="collapse navbar-collapse" id="navbarMenu">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="tsvsuguan-auto.html">Suguan</a></li>
-          <li class="nav-item"><a class="nav-link" href="resbot.html">Chat Bot</a></li>
-          <li class="nav-item"><a class="nav-link active" aria-current="page" href="member-panel.html">My Schedule</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
 <main class="container mt-4">
   <h1>My Schedule</h1>
   <h2>Technical Support for VideoStreaming</h2>
@@ -92,13 +59,7 @@
 </main>
 <footer class="text-center">
   <div class="container">
-    <div class="row">
-      <div class="col-md-6 offset-md-3">
-        <h5 class="text-white">TSV Virac Management System</h5>
-        <p class="footer-text">&copy; 2025 KuysDrew Web Development Inc. All rights reserved.</p>
-        <a href="privacy.html" class="btn btn-link text-decoration-none">Privacy Policy & Terms of Service</a>
-      </div>
-    </div>
+    <p class="footer-text">&copy; 2025 TSV Virac Management System</p>
   </div>
 </footer>
 
@@ -107,9 +68,6 @@
   import {
     getFirestore, collection, getDocs, doc, getDoc, setDoc, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
-  import {
-    getAuth, onAuthStateChanged, signOut
-  } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAwzp3h8tt_tcDF1um--LoroAu1rErMmBc",
@@ -122,23 +80,6 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  const auth = getAuth(app);
-
-  // ✅ Restrict access: only admitted users
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      window.location.href = "login.html";
-      return;
-    }
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (!userSnap.exists() || userSnap.data().status !== "admitted") {
-      alert("Access denied. Only admitted users can access.");
-      await signOut(auth);
-      window.location.href = "login.html";
-    }
-  });
 
   const userSelect = document.getElementById("user");
   const loadBtn = document.getElementById("loadBtn");
@@ -146,10 +87,11 @@
   const scheduleTime = document.getElementById("scheduleTime");
   const inStatus = document.getElementById("inStatus");
   const outStatus = document.getElementById("outStatus");
+  const timeInBtn = document.getElementById("timeInBtn");
   const timeOutBtn = document.getElementById("timeOutBtn");
+  const actionBtnWrapper = document.getElementById("actionBtnWrapper");
   const currentWeekEl = document.getElementById("currentWeek");
 
-  // ✅ ISO Week (Mon-Sun)
   function getISOWeekNumber(d = new Date()) {
     const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
@@ -160,26 +102,18 @@
     return "wk" + getISOWeekNumber();
   }
 
-  // ✅ Show current week
   const currentWeekName = getCurrentWeekCollection();
   currentWeekEl.textContent = "Current Week: " + currentWeekName;
 
-  // ✅ Format Firestore timestamp
   function formatScheduleTime(ts) {
-    if (!ts) return "No schedule";
+    if (!ts) return null;
     let date;
     if (ts.seconds) date = new Date(ts.seconds * 1000);
     else date = new Date(ts);
-    if (isNaN(date)) return "Invalid date";
-    return new Intl.DateTimeFormat("en-US", {
-      weekday: "long",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    }).format(date);
+    if (isNaN(date)) return null;
+    return date;
   }
 
-  // ✅ Populate dropdown from seminar_participants
   async function loadParticipants() {
     const querySnapshot = await getDocs(collection(db, "seminar_participants"));
     querySnapshot.forEach((docSnap) => {
@@ -194,7 +128,6 @@
   }
   loadParticipants();
 
-  // ✅ Load schedule for selected name
   loadBtn.addEventListener("click", async () => {
     const name = userSelect.value.trim();
     if (!name) { alert("Please select your name."); return; }
@@ -206,15 +139,55 @@
     if (docSnap.exists()) {
       const data = docSnap.data();
       userInfo.style.display = "block";
-      scheduleTime.textContent = formatScheduleTime(data.assignedTime);
+
+      const schedDate = formatScheduleTime(data.assignedTime);
+      scheduleTime.textContent = schedDate ? schedDate.toLocaleString("en-US", { weekday: "long", hour: "numeric", minute: "2-digit", hour12: true }) : "No schedule";
+
       inStatus.textContent = data.timeIn ? "✔️" : "❌";
       outStatus.textContent = data.timeOut ? "✔️" : "❌";
 
-      document.getElementById("timeInBtn").onclick = async () => {
+      // Reset wrapper
+      actionBtnWrapper.innerHTML = `
+        <button id="timeInBtn" class="btn btn-custom">Pagtanggap</button>
+        <button id="timeOutBtn" class="btn btn-secondary" style="display:none;">Pagtupad</button>
+      `;
+      const timeInBtn = document.getElementById("timeInBtn");
+      const timeOutBtn = document.getElementById("timeOutBtn");
+
+      const now = new Date();
+
+      // Case 1: Already COMPLETED
+      if (data.timeIn && data.timeOut) {
+        actionBtnWrapper.innerHTML = `<button class="btn-completed" disabled>COMPLETED</button>`;
+        return;
+      }
+
+      // Case 2: Schedule passed and no timeOut => ABSENT
+      if (schedDate && now > schedDate && !data.timeOut) {
+        actionBtnWrapper.innerHTML = `<button class="btn-absent" disabled>ABSENT</button>`;
+        outStatus.textContent = "❌ ABSENT";
+        return;
+      }
+
+      // Case 3: Normal flow
+      timeInBtn.onclick = async () => {
         await setDoc(docRef, { timeIn: serverTimestamp() }, { merge: true });
         inStatus.textContent = "✔️";
         alert("Pagtanggap recorded!");
+        timeOutBtn.style.display = "inline-block";
       };
+
+      timeOutBtn.onclick = async () => {
+        await setDoc(docRef, { timeOut: serverTimestamp() }, { merge: true });
+        outStatus.textContent = "✔️";
+        alert("Pagtupad recorded!");
+        actionBtnWrapper.innerHTML = `<button class="btn-completed" disabled>COMPLETED</button>`;
+      };
+
+      // If already timeIn done, show timeOut button
+      if (data.timeIn && !data.timeOut) {
+        timeOutBtn.style.display = "inline-block";
+      }
 
     } else {
       alert("No schedule found for this name in " + collectionName);
