@@ -164,6 +164,11 @@
 
       // Case 2: Schedule passed and no timeOut => ABSENT
       if (schedDate && now > schedDate && !data.timeOut) {
+        // Save "absent: true" into Firestore if not already set
+        if (!data.absent) {
+          await setDoc(docRef, { absent: true }, { merge: true });
+        }
+
         actionBtnWrapper.innerHTML = `<button class="btn-absent" disabled>ABSENT</button>`;
         outStatus.textContent = "❌ ABSENT";
         return;
