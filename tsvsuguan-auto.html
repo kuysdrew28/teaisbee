@@ -18,169 +18,67 @@
       --card-bg: #1e1e1e;
       --transition-ease: 0.3s ease;
     }
-    body {
-      background-color: var(--bg-dark);
-      font-family: 'Inter', sans-serif;
-      color: var(--text-light);
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    
-    /* Watermark */
-    body::before {
-      content: "Virac- TSV";
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-45deg);
-      font-size: 15vw;
-      font-weight: 800;
-      color: rgba(255, 255, 255, 0.05);
-      z-index: -1;
-      pointer-events: none;
-    }
-    
-    .navbar {
-      background: var(--dark-gray);
-      border-bottom: 3px solid var(--primary-orange);
-      transition: var(--transition-ease);
-    }
-    .navbar-brand img {
-      filter: drop-shadow(0 0 8px var(--primary-orange));
-    }
-    .nav-link {
-      color: var(--text-light) !important;
-      font-weight: 500;
-      transition: var(--transition-ease);
-      padding: 0.5rem 1rem !important;
-      position: relative;
-    }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      width: 0;
-      height: 2px;
-      background-color: var(--primary-orange);
-      transition: var(--transition-ease);
-      transform: translateX(-50%);
-    }
-    .nav-link:hover::after, .nav-link.active::after {
-      width: 80%;
-    }
-    .nav-link:hover, .nav-link.active {
-      color: var(--primary-orange) !important;
-    }
-    
-    .schedule-label {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary-orange);
-      margin: 2rem 0 1rem;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: .5rem;
-      text-transform: uppercase;
-    }
-    .schedule-card {
-      background: var(--card-bg);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-      border: 1px solid rgba(255, 126, 41, 0.2);
-    }
-    .schedule-title {
-      color: var(--secondary-orange);
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    
+    body { background-color: var(--bg-dark); font-family: 'Inter', sans-serif; color: var(--text-light); margin: 0; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+    body::before { content: "Virac- TSV"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 15vw; font-weight: 800; color: rgba(255, 255, 255, 0.05); z-index: -1; pointer-events: none; }
+    .navbar { background: var(--dark-gray); border-bottom: 3px solid var(--primary-orange); transition: var(--transition-ease); }
+    .navbar-brand img { filter: drop-shadow(0 0 8px var(--primary-orange)); }
+    .nav-link { color: var(--text-light) !important; font-weight: 500; transition: var(--transition-ease); padding: 0.5rem 1rem !important; position: relative; }
+    .nav-link::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background-color: var(--primary-orange); transition: var(--transition-ease); transform: translateX(-50%); }
+    .nav-link:hover::after, .nav-link.active::after { width: 80%; }
+    .nav-link:hover, .nav-link.active { color: var(--primary-orange) !important; }
+    .schedule-label { font-size: 1.5rem; font-weight: 700; color: var(--primary-orange); margin: 2rem 0 1rem; border-bottom: 2px solid rgba(255, 255, 255, 0.1); padding-bottom: .5rem; text-transform: uppercase; }
+    .schedule-card { background: var(--card-bg); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid rgba(255, 126, 41, 0.2); }
+    .schedule-title { color: var(--secondary-orange); font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; }
     .table { color: var(--text-light); }
     .table th { color: var(--primary-orange); border-color: rgba(255, 255, 255, 0.1); }
     .table td { border-color: rgba(255, 255, 255, 0.1); }
-    
     .btn { font-weight: bold; transition: var(--transition-ease); }
     .btn-timein { background-color: var(--primary-orange); border: none; color: #121212; }
-    .btn-timein:hover { background-color: #ff9e4d; }
     .btn-timeout { background-color: var(--secondary-orange); border: none; color: #121212; }
-    .btn-timeout:hover { background-color: #ffc27f; }
     .btn-absent { background-color: #b3261e; border: none; color: white; }
-    .btn-absent:hover { background-color: #d13d3d; }
     .btn-present { background-color: #05d438; border: none; color: white; }
-    .btn-present:hover { background-color: #32ed77; }
     .text-center small { color: rgba(255, 255, 255, 0.6); }
-    
-    /* New styles for fixed column widths */
-    .table th.name-col, .table td.name-col {
-      width: 70%; 
-    }
-    .table th.actions-col, .table td.actions-col {
-      width: 30%;
-    }
-    
-    footer {
-      background-color: var(--dark-gray);
-      color: var(--text-light);
-      padding: 40px 0;
-      margin-top: auto;
-    }
+    .table th.name-col, .table td.name-col { width: 70%; }
+    .table th.actions-col, .table td.actions-col { width: 30%; }
+    footer { background-color: var(--dark-gray); color: var(--text-light); padding: 40px 0; margin-top: auto; }
     .footer-text { color: var(--text-light); }
     .btn-link { color: var(--primary-orange); }
-    .btn-link:hover { color: var(--secondary-orange); }
-    
-    @media (max-width: 767.98px) {
-      .schedule-header { flex-direction: column; align-items: flex-start; }
-      .table th, .table td { font-size: 0.85rem; }
-      .btn { font-size: 0.8rem; padding: 0.5rem 0.75rem; }
-    }
   </style>
 </head>
 <body>
-<!--insert loading here... -->
-
-  
-
-<!--END-->
 <nav class="navbar navbar-expand-lg sticky-top">
   <div class="container">
-    <a class="navbar-brand" href="index.html">
-      <img src="image/tsv_logo.png" alt="TSV Virac Logo" height="60" />
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
-      <i class="fa-solid fa-bars text-white"></i>
-    </button>
+    <a class="navbar-brand" href="index.html"><img src="image/tsv_logo.png" alt="TSV Virac Logo" height="60" /></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"><i class="fa-solid fa-bars text-white"></i></button>
     <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link active" aria-current="page" href="tsvsuguan-auto.html">Suguan sa Pagsamba</a></li>
-                <li class="nav-item"><a class="nav-link" aria-current="page" href="tsvsuguan-panata.html">Suguan sa Panata</a></li>
-         <li class="nav-item"><a class="nav-link" href="resbot.html">Chat Bot</a></li>
-        <li class="nav-item"><a class="nav-link" href="status.html">Weekly TSV Status</a></li>
+        <li class="nav-item"><a class="nav-link active" href="tsvsuguan-auto.html">Suguan sa Pagsamba</a></li>
+              <li class="nav-item"><a class="nav-link active" href="tsvsuguan-panata.html">Suguan sa Panata</a></li>
+        <li class="nav-item"><a class="nav-link" href="resbot.html">Chat Bot</a></li>
         <li class="nav-item"><a class="nav-link" href="admin-login.html">Administrator</a></li>
       </ul>
     </div>
   </div>
 </nav>
+
 <div class="container my-5 flex-grow-1">
-  <h2 class="text-center">Suguan ng TSV<br><small>Week 34</small></h2>
+  <h2 class="text-center">Suguan ng TSV<br><small>Week 35</small></h2>
   <div id="scheduleContainer"></div>
 </div>
+
 <footer>
   <div class="container text-center">
     <p class="footer-text mb-0">&copy; 2025 KuysDrew Web Development Inc. All rights reserved.</p>
-   <a href="privacy.html" class="btn btn-link text-decoration-none">Privacy Policy & Terms of Service</a>
+    <a href="privacy.html" class="btn btn-link text-decoration-none">Privacy Policy & Terms of Service</a>
   </div>
 </footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
-      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAwzp3h8tt_tcDF1um--LoroAu1rErMmBc",
@@ -193,30 +91,44 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+// ✅ Restrict access
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+  const userRef = doc(db, "users", user.uid);
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists() || userSnap.data().status !== "admitted") {
+    alert("Access denied. Only admitted users can view this page.");
+    window.location.href = "login.html";
+  } else {
+    loadSchedules(); // ✅ load only after verification
+  }
+});
 
 const scheduleMap = {
-  "2025-08-20T06:00:00": "Miyerkules 6:00AM",
-  "2025-08-21T06:00:00": "Huwebes 6:00AM",
-  "2025-08-21T19:00:00": "Huwebes 7:30PM",
-  "2025-08-23T06:00:00": "Sabado 6:00AM",
-  "2025-08-24T06:00:00": "Linggo 6:00AM",
-  "2025-08-24T08:00:00": "PNK 8:00AM",
-  "2025-08-24T10:00:00": "Linggo 10:00AM"
+  "2025-08-27T06:00:00": "Miyerkules 6:00AM",
+  "2025-08-28T06:00:00": "Huwebes 6:00AM",
+  "2025-08-28T19:00:00": "Huwebes 7:30PM",
+  "2025-08-30T06:00:00": "Sabado 6:00AM",
+  "2025-08-31T06:00:00": "Linggo 6:00AM",
+  "2025-08-31T08:00:00": "PNK 8:00AM",
+  "2025-08-31T10:00:00": "Linggo 10:00AM"
 };
 
-// Group schedules under labels
 const scheduleGroups = {
   "MIDWEEK - PAGSAMBA": ["Miyerkules 6:00AM", "Huwebes 6:00AM", "Huwebes 7:30PM"],
   "WEEKEND - PAGSAMBA": ["Sabado 6:00AM", "Linggo 6:00AM", "PNK 8:00AM", "Linggo 10:00AM"],
-
 };
 
 async function loadSchedules() {
-  const querySnapshot = await getDocs(collection(db, "wk34"));
+  const querySnapshot = await getDocs(collection(db, "wk35"));
   const scheduleContainer = document.getElementById("scheduleContainer");
   scheduleContainer.innerHTML = "";
 
-  // organize members per schedule
   const grouped = {};
   querySnapshot.forEach(docSnap => {
     const data = docSnap.data();
@@ -225,7 +137,6 @@ async function loadSchedules() {
     grouped[scheduleName].push({ name: docSnap.id, ...data });
   });
 
-  // render by main label (Midweek / Weekend)
   for (const [label, schedules] of Object.entries(scheduleGroups)) {
     const labelEl = document.createElement("div");
     labelEl.className = "schedule-label";
@@ -241,13 +152,13 @@ async function loadSchedules() {
                 <thead><tr><th class="name-col">Name</th><th class="actions-col">Actions</th></tr></thead><tbody>`;
       grouped[schedule].forEach(member => {
         if (member.absent) {
-          html += `<tr><td class="name-col">${member.name}</td><td class="actions-col"><button class="btn btn-absent w-100">Absent</button></td></tr>`;
+          html += `<tr><td>${member.name}</td><td><button class="btn btn-absent w-100">Absent</button></td></tr>`;
         } else if (!member.timeIn) {
-          html += `<tr><td class="name-col">${member.name}</td><td class="actions-col"><button class="btn btn-timein w-100" onclick="timeIn('${member.name}')">Pagtanggap</button></td></tr>`;
+          html += `<tr><td>${member.name}</td><td><button class="btn btn-timein w-100" onclick="timeIn('${member.name}')">Pagtanggap</button></td></tr>`;
         } else if (!member.timeOut) {
-          html += `<tr><td class="name-col">${member.name}</td><td class="actions-col"><button class="btn btn-timeout w-100" onclick="timeOut('${member.name}')">Pagtupad</button></td></tr>`;
+          html += `<tr><td>${member.name}</td><td><button class="btn btn-timeout w-100" onclick="timeOut('${member.name}')">Pagtupad</button></td></tr>`;
         } else {
-          html += `<tr><td class="name-col">${member.name}</td><td class="actions-col"><button class="btn btn-present w-100">Completed</button></td></tr>`;
+          html += `<tr><td>${member.name}</td><td><button class="btn btn-present w-100">Completed</button></td></tr>`;
         }
       });
       html += "</tbody></table></div>";
@@ -258,39 +169,13 @@ async function loadSchedules() {
 }
 
 window.timeIn = async function(name) {
-  await updateDoc(doc(db, "wk34", name), { timeIn: new Date().toISOString() });
+  await updateDoc(doc(db, "wk35", name), { timeIn: new Date().toISOString() });
   loadSchedules();
 };
 window.timeOut = async function(name) {
-  await updateDoc(doc(db, "wk34", name), { timeOut: new Date().toISOString() });
+  await updateDoc(doc(db, "wk35", name), { timeOut: new Date().toISOString() });
   loadSchedules();
 };
-
-loadSchedules();
-
-
 </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
