@@ -29,9 +29,56 @@
     .btn-completed { background:#28a745; color:white; border:none; cursor:not-allowed; width:100%; padding:15px; border-radius:10px; font-weight:bold; }
     .bg-dark { background: #1b1b1b !important; }
     footer { background-color: var(--bg-card); color: var(--text-light); padding: 20px 0; text-align: center; }
+    /* Overlay background */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none; /* hidden by default */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    /* Loading box */
+    .loading-box {
+      background: rgb(10, 10, 10);
+      padding: 20px 40px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    /* Spinner animation */
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Loading Pop-up -->
+  <div class="loading-overlay" id="loadingPopup">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p>Loading, please wait...</p>
+    </div>
+  </div>
 <main class="container mt-4">
   <h1>My Schedule</h1>
   <h2>Technical Support for VideoStreaming</h2>
@@ -133,12 +180,21 @@
     });
   }
 
+ function showLoading() {
+      document.getElementById("loadingPopup").style.display = "flex";
+
+      // Example: Hide after 3 seconds (simulate loading)
+      setTimeout(() => {
+        document.getElementById("loadingPopup").style.display = "none";
+      }, 1000);
+    }
 
 
 
   loadParticipants();
 
   loadBtn.addEventListener("click", async () => {
+    
     const name = userSelect.value.trim();
     if (!name) { alert("Please select your name."); return; }
 
@@ -147,6 +203,7 @@
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
+        showLoading();
       const data = docSnap.data();
       userInfo.style.display = "block";
 
@@ -186,6 +243,7 @@
 
       // Case 3: Normal flow
       timeInBtn.onclick = async () => {
+        showLoading();
         await setDoc(docRef, { timeIn: serverTimestamp() }, { merge: true });
         inStatus.textContent = "✔️";
         alert("Pagtanggap recorded!");
@@ -221,6 +279,7 @@ onAuthStateChanged(auth, async (user) => {
     alert("Access denied. Only admitted users can view this page.");
     window.location.href = "login.html";
   } else {
+      showLoading();
     loadSchedules(); // ✅ load only after verification
   }
 });
@@ -238,6 +297,7 @@ onAuthStateChanged(auth, async (user) => {
 
   // Logout function
   document.getElementById("logoutBtn").addEventListener("click", () => {
+    showLoading();
     signOut(auth).then(() => {
       console.log("User signed out.");
       alert("You have been logged out.");
