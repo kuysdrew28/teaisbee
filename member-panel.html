@@ -68,6 +68,7 @@
   import {
     getFirestore, collection, getDocs, doc, getDoc, setDoc, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAwzp3h8tt_tcDF1um--LoroAu1rErMmBc",
@@ -80,6 +81,7 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth(app);
 
   const userSelect = document.getElementById("user");
   const loadBtn = document.getElementById("loadBtn");
@@ -126,6 +128,10 @@
       }
     });
   }
+
+
+
+
   loadParticipants();
 
   loadBtn.addEventListener("click", async () => {
@@ -198,6 +204,23 @@
       alert("No schedule found for this name in " + collectionName);
     }
   });
+
+    // ✅ Restrict access
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+  const userRef = doc(db, "users", user.uid);
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists() || userSnap.data().status !== "admitted") {
+    alert("Access denied. Only admitted users can view this page.");
+    window.location.href = "login.html";
+  } else {
+    loadSchedules(); // ✅ load only after verification
+  }
+});
+
 </script>
 </body>
 </html>
