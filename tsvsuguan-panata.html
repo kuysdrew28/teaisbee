@@ -157,7 +157,19 @@
 <body>
 <!--insert loading here... -->
 
-
+<!-- Popup Overlay -->
+<div id="schedulePopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; display:flex; justify-content:center; align-items:center; text-align:center; color:white; padding:20px;">
+  <div style="background:#1e1e1e; padding:30px; border-radius:15px; max-width:500px; box-shadow:0 0 20px rgba(255,126,41,0.5);">
+    <div class="d-flex flex-column align-items-center">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <h1 style="color:#ff7e29;">NOTICE</h1>
+      <p>No assigned schedules for Panata.<br>
+      Please contact system administrator for more info.</p>
+              <a href="index.html" btn class="btn btn-primary">Back to Home</a>
+    </div>
+  </div>
+</div>
 
 <!--END-->
 <nav class="navbar navbar-expand-lg sticky-top">
@@ -197,15 +209,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAwzp3h8tt_tcDF1um--LoroAu1rErMmBc",
-  authDomain: "virac-tsv.firebaseapp.com",
-  projectId: "virac-tsv",
-  storageBucket: "virac-tsv.appspot.com",
-  messagingSenderId: "455316064834",
-  appId: "1:455316064834:web:1dc1033265b58a6c82bbdb"
-};
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -226,7 +229,7 @@ const scheduleGroups = {
 };
 
 async function loadSchedules() {
-  const querySnapshot = await getDocs(collection(db, "panata_wk35"));
+  const querySnapshot = await getDocs(collection(db, "panata_00"));
   const scheduleContainer = document.getElementById("scheduleContainer");
   scheduleContainer.innerHTML = "";
 
@@ -272,11 +275,11 @@ async function loadSchedules() {
 }
 
 window.timeIn = async function(name) {
-  await updateDoc(doc(db, "panata_wk35", name), { timeIn: new Date().toISOString() });
+  await updateDoc(doc(db, "panata_00", name), { timeIn: new Date().toISOString() });
   loadSchedules();
 };
 window.timeOut = async function(name) {
-  await updateDoc(doc(db, "panata_wk35", name), { timeOut: new Date().toISOString() });
+  await updateDoc(doc(db, "panata_00", name), { timeOut: new Date().toISOString() });
   loadSchedules();
 };
 
