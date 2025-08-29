@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>TSV Schedules</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-orange: #ff7e29;
+      --secondary-orange: #ff9e4d;
+      --dark-gray: #1a1a1a;
+      --light-gray: #f5f5f5;
+      --bg-dark: #121212;
+      --text-light: #e0e0e0;
+      --card-bg: #1e1e1e;
+      --transition-ease: 0.3s ease;
+    }
+    body { background-color: var(--bg-dark); font-family: 'Inter', sans-serif; color: var(--text-light); margin: 0; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+    body::before { content: "Virac- TSV"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 15vw; font-weight: 800; color: rgba(255, 255, 255, 0.05); z-index: -1; pointer-events: none; }
+    .navbar { background: var(--dark-gray); border-bottom: 3px solid var(--primary-orange); transition: var(--transition-ease); }
+    .navbar-brand img { filter: drop-shadow(0 0 8px var(--primary-orange)); }
+    .nav-link { color: var(--text-light) !important; font-weight: 500; transition: var(--transition-ease); padding: 0.5rem 1rem !important; position: relative; }
+    .nav-link::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background-color: var(--primary-orange); transition: var(--transition-ease); transform: translateX(-50%); }
+    .nav-link:hover::after, .nav-link.active::after { width: 80%; }
+    .nav-link:hover, .nav-link.active { color: var(--primary-orange) !important; }
+    .schedule-label { font-size: 1.5rem; font-weight: 700; color: var(--primary-orange); margin: 2rem 0 1rem; border-bottom: 2px solid rgba(255, 255, 255, 0.1); padding-bottom: .5rem; text-transform: uppercase; }
+    .schedule-card { background: var(--card-bg); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid rgba(255, 126, 41, 0.2); }
+    .schedule-title { color: var(--secondary-orange); font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; }
+    .table { color: var(--text-light); }
+    .table th { color: var(--primary-orange); border-color: rgba(255, 255, 255, 0.1); }
+    .table td { border-color: rgba(255, 255, 255, 0.1); }
+    .btn { font-weight: bold; transition: var(--transition-ease); }
+    .btn-timein { background-color: var(--primary-orange); border: none; color: #121212; }
+    .btn-timeout { background-color: var(--secondary-orange); border: none; color: #121212; }
+    .btn-absent { background-color: #b3261e; border: none; color: white; }
+    .btn-present { background-color: #05d438; border: none; color: white; }
+    .text-center small { color: rgba(255, 255, 255, 0.6); }
+    .table th.name-col, .table td.name-col { width: 70%; }
+    .table th.actions-col, .table td.actions-col { width: 30%; }
+    footer { background-color: var(--dark-gray); color: var(--text-light); padding: 40px 0; margin-top: auto; }
+    .footer-text { color: var(--text-light); }
+    .btn-link { color: var(--primary-orange); }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html"><img src="image/tsv_logo.png" alt="TSV Virac Logo" height="60" /></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"><i class="fa-solid fa-bars text-white"></i></button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="tsvsuguan-auto.html">Suguan sa Pagsamba</a></li>
+<li class="nav-item"><a class="nav-link" href="status.html">TSV Status</a></li>
+        <li class="nav-item"><a class="nav-link" href="resbot.html">Chat Bot</a></li>
+        <li class="nav-item"><a class="nav-link" href="tsvgames.html">TSV Games (BETA)</a></li>
+                        <li class="nav-item"><a class="nav-link" href="member-panel.html">User Panel</a></li>
+        <li class="nav-item"><a class="nav-link" href="admin-panel.html">Administrator</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-5 flex-grow-1">
+  <h2 class="text-center">Suguan ng TSV<br><small>Week 35</small></h2>
+  <div id="scheduleContainer"></div>
+</div>
+
+<footer>
+  <div class="container text-center">
+    <p class="footer-text mb-0">&copy; 2025 KuysDrew Web Development Inc. All rights reserved.</p>
+    <a href="privacy.html" class="btn btn-link text-decoration-none">Privacy Policy & Terms of Service</a>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAwzp3h8tt_tcDF1um--LoroAu1rErMmBc",
+  authDomain: "virac-tsv.firebaseapp.com",
+  projectId: "virac-tsv",
+  storageBucket: "virac-tsv.appspot.com",
+  messagingSenderId: "455316064834",
+  appId: "1:455316064834:web:1dc1033265b58a6c82bbdb"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// ✅ Restrict access
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+  const userRef = doc(db, "users", user.uid);
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists() || userSnap.data().status !== "admitted") {
+    alert("Access denied. Only admitted users can view this page.");
+    window.location.href = "login.html";
+  } else {
+    loadSchedules(); // ✅ load only after verification
+  }
+});
+
+const scheduleMap = {
+  "2025-08-27T06:00:00": "Miyerkules 6:00AM",
+  "2025-08-28T06:00:00": "Huwebes 6:00AM",
+  "2025-08-28T19:30:00": "Huwebes 7:30PM",
+  "2025-08-30T06:00:00": "Sabado 6:00AM",
+  "2025-08-31T06:00:00": "Linggo 6:00AM",
+  "2025-08-31T08:00:00": "PNK 8:00AM",
+  "2025-08-31T10:00:00": "Linggo 10:00AM"
+};
+
+const scheduleGroups = {
+  "MIDWEEK - PAGSAMBA": ["Miyerkules 6:00AM", "Huwebes 6:00AM", "Huwebes 7:30PM"],
+  "WEEKEND - PAGSAMBA": ["Sabado 6:00AM", "Linggo 6:00AM", "PNK 8:00AM", "Linggo 10:00AM"],
+};
+
+async function loadSchedules() {
+  const querySnapshot = await getDocs(collection(db, "wk35"));
+  const scheduleContainer = document.getElementById("scheduleContainer");
+  scheduleContainer.innerHTML = "";
+
+  const grouped = {};
+  querySnapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    const scheduleName = scheduleMap[data.assignedTime] || "Unassigned";
+    if (!grouped[scheduleName]) grouped[scheduleName] = [];
+    grouped[scheduleName].push({ name: docSnap.id, ...data });
+  });
+
+  for (const [label, schedules] of Object.entries(scheduleGroups)) {
+    const labelEl = document.createElement("div");
+    labelEl.className = "schedule-label";
+    labelEl.textContent = label;
+    scheduleContainer.appendChild(labelEl);
+
+    schedules.forEach(schedule => {
+      if (!grouped[schedule]) return;
+      const card = document.createElement("div");
+      card.className = "schedule-card";
+      let html = `<div class="schedule-title">${schedule}</div>`;
+      html += `<div class="table-responsive"><table class="table table-dark table-bordered">
+                <thead><tr><th class="name-col">Name</th><th class="actions-col">Actions</th></tr></thead><tbody>`;
+      grouped[schedule].forEach(member => {
+        if (member.absent) {
+          html += `<tr><td>${member.name}</td><td><button class="btn btn-absent w-100">Absent</button></td></tr>`;
+        } else if (!member.timeIn) {
+          html += `<tr><td>${member.name}</td><td><button class="btn btn-timein w-100" onclick="timeIn('${member.name}')">Pagtanggap</button></td></tr>`;
+        } else if (!member.timeOut) {
+          html += `<tr><td>${member.name}</td><td><button class="btn btn-timeout w-100" onclick="timeOut('${member.name}')">Pagtupad</button></td></tr>`;
+        } else {
+          html += `<tr><td>${member.name}</td><td><button class="btn btn-present w-100">Completed</button></td></tr>`;
+        }
+      });
+      html += "</tbody></table></div>";
+      card.innerHTML = html;
+      scheduleContainer.appendChild(card);
+    });
+  }
+}
+
+window.timeIn = async function(name) {
+  await updateDoc(doc(db, "wk35", name), { timeIn: new Date().toISOString() });
+  loadSchedules();
+};
+window.timeOut = async function(name) {
+  await updateDoc(doc(db, "wk35", name), { timeOut: new Date().toISOString() });
+  loadSchedules();
+};
+</script>
+</body>
+</html>
+
+
+
+
