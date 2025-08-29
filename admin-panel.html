@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TSV Virac - Admin Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="footer.js" defer></script>
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="footer.js" defer></script>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/index.css">
   <style>
     :root {
       --primary-orange: #ff7e29;
@@ -25,7 +25,6 @@
     .nav-link:hover { color: var(--primary-orange); }
     .dashboard-card { transition: transform var(--transition-ease), box-shadow var(--transition-ease); border: 1px solid rgba(255, 126, 41, 0.2); }
     .dashboard-card:active { transform: scale(0.97); }
-    
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -60,7 +59,7 @@
       <a href="survey/admin-survey.html" class="dashboard-card bg-card rounded-xl p-6 text-center">Schedule</a>
       <a href="https://docs.google.com/spreadsheets/d/..." target="_blank" class="dashboard-card bg-card rounded-xl p-6 text-center">Latest Form 3</a>
       <a href="Attendance/summary.html" class="dashboard-card bg-card rounded-xl p-6 text-center">Attendance</a>
-          <a href="inventory.html" class="dashboard-card bg-card rounded-xl p-6 text-center">Inventory</a>
+      <a href="inventory.html" class="dashboard-card bg-card rounded-xl p-6 text-center">Inventory</a>
     </div>
   </main>
 
@@ -85,27 +84,36 @@
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBBMRruXH9Va15eBgogfwQF2zMD8gxZPps",
-    authDomain: "admin-1cbb9.firebaseapp.com",
-    projectId: "admin-1cbb9",
-    storageBucket: "admin-1cbb9.firebasestorage.app",
-    messagingSenderId: "300755873138",
-    appId: "1:300755873138:web:c54b3acf90f03b361241eb"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyBBMRruXH9Va15eBgogfwQF2zMD8gxZPps",
+      authDomain: "admin-1cbb9.firebaseapp.com",
+      projectId: "admin-1cbb9",
+      storageBucket: "admin-1cbb9.firebasestorage.app",
+      messagingSenderId: "300755873138",
+      appId: "1:300755873138:web:c54b3acf90f03b361241eb"
+    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Unified Auth Check
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        window.location.href = "admin-login.html"; // redirect if not logged in
+        // Not logged in → redirect
+        window.location.href = "admin-login.html";
       } else {
-        const ref = doc(db, "users", user.uid);
-        const snap = await getDoc(ref);
-        if (!snap.exists() || snap.data().status !== "admitted") {
-          alert("Access denied. Not admitted.");
+        try {
+          const ref = doc(db, "users", user.uid);
+          const snap = await getDoc(ref);
+          if (!snap.exists() || snap.data().status !== "admitted") {
+            alert("Access denied. Not admitted.");
+            window.location.href = "admin-login.html";
+          } else {
+            console.log("Welcome:", user.email);
+          }
+        } catch (error) {
+          console.error("Error checking user:", error);
           window.location.href = "admin-login.html";
         }
       }
