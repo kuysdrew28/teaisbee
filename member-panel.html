@@ -11,8 +11,10 @@
 <script src="https://files.bpcontent.cloud/2025/08/22/06/20250822063030-NCUYH9BC.js" defer></script>
   <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/index.css">
+          <script src="javascript/footer.js" defer></script>
 
-
+<!-- Link your custom JS file -->
+<script src="custom.js"></script>
 
   <style>
     :root {
@@ -32,6 +34,7 @@
     #loadBtn { background:#ff7300; color:#121212; }
     #timeInBtn { background:#28a745; color:white; border:none; }
     #timeOutBtn { background:#007bff; color:white; border:none; }
+        #logoutBtn { background:#007bff; color:white; border:none; }
     .btn-absent { background:#dc3545; color:white; border:none; cursor:not-allowed; width:100%; padding:15px; border-radius:10px; font-weight:bold; }
     .btn-completed { background:#28a745; color:white; border:none; cursor:not-allowed; width:100%; padding:15px; border-radius:10px; font-weight:bold; }
     .bg-dark { background: #1b1b1b !important; }
@@ -101,7 +104,7 @@
         <li class="nav-item"><a class="nav-link" href="tsvsuguan-auto.html">Suguan</a></li>
                         <li class="nav-item"><a class="nav-link" href="tsvgames.html">TSV Games (BETA)</a></li>
         <li class="nav-item"><a class="nav-link active" href="member-panel.html">User Panel</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="inventory-report.html">Inventory</a></li>
+                            <li class="nav-item"><a class="nav-link" href="inventory-report.html">Inventory</a></li>
       </ul>
     </div>
   </div>
@@ -127,9 +130,11 @@
       <div id="actionBtnWrapper" class="mt-3">
         <button id="timeInBtn" class="btn btn-custom">Pagtanggap</button>
         <button id="timeOutBtn" class="btn btn-secondary" style="display:none;">Pagtupad</button>
+
       </div>
-    </div>
-  </div>
+
+    </div>        <button id="logoutBtn" class="btn btn-danger">Logout Account</button>
+  </div>      
 
 </main>
      
@@ -335,6 +340,3 @@ onAuthStateChanged(auth, async (user) => {
 </script>
 </body>
 </html>
-
-
-
