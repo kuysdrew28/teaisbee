@@ -1,0 +1,130 @@
+    :root {
+      --primary-orange: #ff7e29;
+      --secondary-orange: #ff9e4d;
+      --dark-gray: #1a1a1a;
+      --light-gray: #f5f5f5;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition-ease: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+      color: var(--dark-gray);
+    }
+
+    /* General Sections */
+    .section-title {
+      font-size: 2.5rem;
+      position: relative;
+      padding-bottom: 10px;
+      margin-bottom: 50px;
+      text-align: center;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background-color: var(--primary-orange);
+      border-radius: 2px;
+    }
+
+    /* About Section */
+    .about-icon-box {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      transition: var(--transition-ease);
+      box-shadow: var(--card-shadow);
+      height: 100%;
+    }
+    .about-icon-box:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    .about-icon-box i {
+      font-size: 3rem;
+      color: var(--primary-orange);
+      margin-bottom: 15px;
+    }
+    .about-icon-box h5 {
+      font-weight: 600;
+    }
+
+    /* Activities Section */
+    .activity-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition-ease);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .activity-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    .activity-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .activity-card:hover img {
+      transform: scale(1.05);
+    }
+    .activity-card-body {
+      padding: 25px;
+    }
+    .activity-card h5 {
+      color: var(--primary-orange);
+      font-weight: 600;
+    }
+    .activity-card p {
+      color: #555;
+    }
+
+    /* Announcements Section */
+    .announcement-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 10px rgba(0,0,0,0.05);
+      margin-bottom: 1rem;
+      transition: var(--transition-ease);
+      text-decoration: none;
+      color: inherit;
+    }
+    .announcement-item:hover {
+      background-color: #fff8f2;
+      transform: translateY(-3px);
+    }
+    .announcement-icon {
+      font-size: 2.5rem;
+      color: var(--primary-orange);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .announcement-content h5 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .announcement-content small {
+      color: #888;
+      font-style: italic;
+    }
