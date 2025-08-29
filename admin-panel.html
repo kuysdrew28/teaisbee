@@ -97,23 +97,14 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Unified Auth Check
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        // Not logged in → redirect
-        window.location.href = "admin-login.html";
+        window.location.href = "admin-login.html"; // redirect if not logged in
       } else {
-        try {
-          const ref = doc(db, "users", user.uid);
-          const snap = await getDoc(ref);
-          if (!snap.exists() || snap.data().status !== "admitted") {
-            alert("Access denied. Not admitted.");
-            window.location.href = "admin-login.html";
-          } else {
-            console.log("Welcome:", user.email);
-          }
-        } catch (error) {
-          console.error("Error checking user:", error);
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+        if (!snap.exists() || snap.data().status !== "admitted") {
+          alert("Access denied. Not admitted.");
           window.location.href = "admin-login.html";
         }
       }
