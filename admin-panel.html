@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TSV Virac - Admin Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="footer.js" defer></script>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/index.css">
   <style>
     :root {
       --primary-orange: #ff7e29;
@@ -18,70 +21,61 @@
       --transition-ease: 0.3s ease;
     }
     body { background-color: var(--bg-dark); font-family: 'Inter', sans-serif; color: var(--text-light); }
-    .text-orange { color: var(--primary-orange); }
-    .bg-card { background-color: var(--card-bg); }
-    .hover-bg-orange:hover { background-color: var(--primary-orange); }
-    .hover-text-dark:hover { color: var(--dark-gray); }
-    .navbar { background: var(--dark-gray); border-bottom: 3px solid var(--primary-orange); }
-    .navbar-brand img { filter: drop-shadow(0 0 5px rgba(255, 126, 41, 0.5)); }
-    .nav-link { color: white !important; font-weight: 500; transition: var(--transition-ease); padding: 0.5rem 1rem !important; position: relative; }
-    .nav-link::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background-color: var(--primary-orange); transition: var(--transition-ease); transform: translateX(-50%); }
-    .nav-link:hover::after { width: 80%; }
-    .nav-link.active, .nav-link.active:hover { color: var(--primary-orange) !important; }
-    body::before { content: "Virac TSV"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 15vw; font-weight: 800; color: rgba(255, 255, 255, 0.05); z-index: -1; pointer-events: none; }
+    .nav-link { color: white; font-weight: 500; padding: 0.5rem 1rem; display: block; }
+    .nav-link:hover { color: var(--primary-orange); }
     .dashboard-card { transition: transform var(--transition-ease), box-shadow var(--transition-ease); border: 1px solid rgba(255, 126, 41, 0.2); }
-    .dashboard-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(255, 126, 41, 0.2); }
-    footer { background-color: var(--dark-gray); color: #bbb; padding: 40px 0; }
-    footer h5 { color: white; font-weight: 600; margin-bottom: 20px; }
-    footer a { color: var(--secondary-orange); text-decoration: none; transition: color 0.3s; }
-    footer a:hover { color: var(--primary-orange); }
-    .footer-text { color: white; }
-    .header-container { border-bottom: 3px solid var(--primary-orange); background-color: var(--dark-gray); }
-    .header-title { text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+    .dashboard-card:active { transform: scale(0.97); }
+    
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
   <!-- Header -->
-  <header class="header-container p-4 md:p-6 shadow-lg">
+  <header class="header-container p-4 md:p-6 shadow-lg bg-gray-900 border-b-4 border-orange-500">
     <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
       <a class="flex items-center mb-4 md:mb-0" href="index.html">
         <img src="image/tsv_logo.png" alt="TSV Virac Logo" height="60" class="h-12 mr-3">
-        <h1 class="text-xl md:text-3xl font-bold text-orange-500 header-title">Admin Dashboard</h1>
+        <h1 class="text-xl md:text-3xl font-bold text-orange-500">Admin Dashboard</h1>
       </a>
-      <button class="md:hidden text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <!-- Mobile Menu Button -->
+      <button id="menuToggle" class="md:hidden text-white p-2">
         <i class="fa-solid fa-bars text-2xl"></i>
       </button>
-      <nav class="collapse navbar-collapse md:flex md:items-center" id="navMenu">
-        <ul class="navbar-nav flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6">
-          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="tsvsuguan-auto.html">Suguan</a></li>
-          <li class="nav-item"><a class="nav-link" href="resbot.html">Chat Bot</a></li>
-          <li class="nav-item"><a class="nav-link" href="member-panel.html">User Panel</a></li>
-        </ul>
+      <!-- Nav Links -->
+      <nav id="navMenu" class="hidden md:flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-center">
+        <a class="nav-link active text-orange-400" href="index.html">Home</a>
+        <a class="nav-link" href="tsvsuguan-auto.html">Suguan</a>
+        <a class="nav-link" href="resbot.html">Chat Bot</a>
+        <a class="nav-link" href="member-panel.html">User Panel</a>
       </nav>
     </div>
   </header>
 
   <!-- Main -->
   <main class="flex-grow container mx-auto p-4 md:p-8">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <a href="assign.html" class="dashboard-card bg-card rounded-xl p-6 text-center">Assign Users</a>
       <a href="status.html" class="dashboard-card bg-card rounded-xl p-6 text-center">TSV Status</a>
       <a href="superadmin.html" class="dashboard-card bg-card rounded-xl p-6 text-center">Admit TSV</a>
       <a href="survey/admin-survey.html" class="dashboard-card bg-card rounded-xl p-6 text-center">Schedule</a>
-      <a href="https://docs.google.com/spreadsheets/d/13sZNgkX6PkjpqiugPHA3eLFmBmczhpc4/edit?usp=drivesdk&ouid=117243803781635905350&rtpof=true&sd=true" class="dashboard-card bg-card rounded-xl p-6 text-center">Latest Form 3</a>
+      <a href="https://docs.google.com/spreadsheets/d/..." target="_blank" class="dashboard-card bg-card rounded-xl p-6 text-center">Latest Form 3</a>
       <a href="Attendance/summary.html" class="dashboard-card bg-card rounded-xl p-6 text-center">Attendance</a>
     </div>
   </main>
 
   <!-- Footer -->
-  <footer class="text-center">
-    <div class="container">
-      <h5 class="text-white">TSV Virac Management System</h5>
-      <p class="footer-text">&copy; 2025 KuysDrew Web Development Inc. All rights reserved.</p>
-      <a href="privacy.html" class="btn btn-link">Privacy Policy & Terms</a>
-    </div>
+  <footer class="bg-gray-900 text-center p-4 text-sm border-t border-orange-500">
+    <p>&copy; 2025 ViracTSV | All rights reserved.</p>
+    <a href="privacy.html" class="text-orange-400 hover:underline">Privacy Policy & Terms</a>
   </footer>
+
+  <!-- Mobile Menu Script -->
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navMenu = document.getElementById("navMenu");
+    menuToggle.addEventListener("click", () => {
+      navMenu.classList.toggle("hidden");
+    });
+  </script>
 
   <!-- Firebase Auth Restriction -->
   <script type="module">
