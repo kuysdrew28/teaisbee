@@ -86,27 +86,26 @@
     <label class="fw-bold me-2">Select Week Database:</label>
     <select id="weekSelect" class="form-select d-inline-block w-auto">
       <option value="">-- Choose Week --</option>
-      <option value="wk35">wk35</option>
-      <option value="wk36">wk36</option>
       <option value="wk37">wk37</option>
       <option value="wk38">wk38</option>
-           <option value="wk38">wk39</option>
-           <option value="wk38">wk40</option>
-           <option value="wk38">wk41</option>
-           <option value="wk38">wk42</option>
-           <option value="wk38">wk43</option>
-           <option value="wk38">wk44</option>
-           <option value="wk38">wk45</option>
-           <option value="wk38">wk46</option>
-           <option value="wk38">wk47</option>
-           <option value="wk38">wk48</option>
-           <option value="wk38">wk49</option>
-           <option value="wk38">wk50</option>
+      <option value="wk38">wk39</option>
+      <option value="wk38">wk40</option>
+      <option value="wk38">wk41</option>
+      <option value="wk38">wk42</option>
+      <option value="wk38">wk43</option>
+      <option value="wk38">wk44</option>
+      <option value="wk38">wk45</option>
+      <option value="wk38">wk46</option>
+      <option value="wk38">wk47</option>
     </select>
   </div>
 
   <!-- Add User Button -->
   <div class="d-flex justify-content-end mb-3">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+<button onclick="window.location.href='../admin-panel.html'">
+  Go to Admin Panel
+</button>
     <button id="addUserBtn" class="add-user btn">➕ Add User</button>
   </div>
 
@@ -158,6 +157,11 @@
     { label:"Sunday 6:00 AM",      weekday: 6, hour: 6,  minute: 0  }, // Sun
     { label:"PNK 8:00 AM",         weekday: 6, hour: 8,  minute: 0  }, // Sun
     { label:"Sunday 10:00 AM",     weekday: 6, hour: 10, minute: 0  }, // Sun
+    { label:"Monday 7:00 PM",   weekday: 0, hour: 19,  minute: 0  },
+    { label:"Tuesday 7:00 PM",   weekday: 1, hour: 19,  minute: 0  },
+    { label:"Friday 7:00 PM",   weekday: 4, hour: 19,  minute: 0  },
+    { label:"Saturday 9:00 AM",    weekday: 5, hour: 9,  minute: 0  },
+    { label:"Saturday 10:00 AM",    weekday: 5, hour: 10,  minute: 0  }
   ];
 
   // ---------- helpers ----------
