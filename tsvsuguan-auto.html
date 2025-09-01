@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Prevent Google and other bots from indexing -->
+  <meta name="robots" content="noindex, nofollow">
   <meta charset="utf-8" />
   <title>TSV Schedules</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Botpress Inject Scripts -->
+<script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2025/08/22/06/20250822063030-NCUYH9BC.js" defer></script>
+
+<!-- Link your custom JS file -->
+<script src="custom.js"></script>
+      <script src="javascript/footer.js" defer></script>
+
   <style>
     :root {
       --primary-orange: #ff7e29;
       --secondary-orange: #ff9e4d;
+      --third-orange: #0c63cd;
       --dark-gray: #1a1a1a;
       --light-gray: #f5f5f5;
       --bg-dark: #121212;
@@ -18,9 +29,41 @@
       --card-bg: #1e1e1e;
       --transition-ease: 0.3s ease;
     }
+    /* Video background */
+    .bg-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -2; /* keep behind overlay */
+    }
+
+    /* Dark overlay for dimming */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5); /* adjust 0.5 for more/less dim */
+      z-index: -1;
+    }
+
+    /* Foreground content */
+    .content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
     body { background-color: var(--bg-dark); font-family: 'Inter', sans-serif; color: var(--text-light); margin: 0; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
-    body::before { content: "Virac- TSV"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 15vw; font-weight: 800; color: rgba(255, 255, 255, 0.05); z-index: -1; pointer-events: none; }
-    .navbar { background: var(--dark-gray); border-bottom: 3px solid var(--primary-orange); transition: var(--transition-ease); }
+ .navbar { background: var(--dark-gray); border-bottom: 3px solid var(--primary-orange); transition: var(--transition-ease); }
     .navbar-brand img { filter: drop-shadow(0 0 8px var(--primary-orange)); }
     .nav-link { color: var(--text-light) !important; font-weight: 500; transition: var(--transition-ease); padding: 0.5rem 1rem !important; position: relative; }
     .nav-link::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px; background-color: var(--primary-orange); transition: var(--transition-ease); transform: translateX(-50%); }
@@ -34,7 +77,7 @@
     .table td { border-color: rgba(255, 255, 255, 0.1); }
     .btn { font-weight: bold; transition: var(--transition-ease); }
     .btn-timein { background-color: var(--primary-orange); border: none; color: #121212; }
-    .btn-timeout { background-color: var(--secondary-orange); border: none; color: #121212; }
+    .btn-timeout { background-color: var(--third-orange); border: none; color: #fffdfd; }
     .btn-absent { background-color: #b3261e; border: none; color: white; }
     .btn-present { background-color: #05d438; border: none; color: white; }
     .text-center small { color: rgba(255, 255, 255, 0.6); }
@@ -43,51 +86,86 @@
     footer { background-color: var(--dark-gray); color: var(--text-light); padding: 40px 0; margin-top: auto; }
     .footer-text { color: var(--text-light); }
     .btn-link { color: var(--primary-orange); }
+    /* Overlay background */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none; /* hidden by default */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    /* Loading box */
+    .loading-box {
+      background: rgb(10, 10, 10);
+      padding: 20px 40px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    /* Spinner animation */
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
-  <!-- Popup Overlay -->
-<div id="schedulePopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; display:flex; justify-content:center; align-items:center; text-align:center; color:white; padding:20px;">
-  <div style="background:#1e1e1e; padding:30px; border-radius:15px; max-width:500px; box-shadow:0 0 20px rgba(255,126,41,0.5);">
-    <div class="d-flex flex-column align-items-center">
-      <div class="spinner-border text-warning mb-3" role="status" style="width:3rem; height:3rem;">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-      <h1 style="color:#ff7e29;">Generating Schedules</h1>
-      <p>Please wait while we generate the weekly schedules.<br>
-      Please contact system administrator for more info.</p>
+
+
+  <!-- Loading Pop-up -->
+  <div class="loading-overlay" id="loadingPopup">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p>Loading, please wait...</p>
     </div>
   </div>
-</div>
+    <!-- Background Video -->
+  <video autoplay muted loop class="bg-video">
+    <source src="video/bac.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 <nav class="navbar navbar-expand-lg sticky-top">
   <div class="container">
     <a class="navbar-brand" href="index.html"><img src="image/tsv_logo.png" alt="TSV Virac Logo" height="60" /></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"><i class="fa-solid fa-bars text-white"></i></button>
     <div class="collapse navbar-collapse" id="navMenu">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link active" href="tsvsuguan-auto.html">Suguan sa Pagsamba</a></li>
-<li class="nav-item"><a class="nav-link" href="status.html">TSV Status</a></li>
-        <li class="nav-item"><a class="nav-link" href="resbot.html">Chat Bot</a></li>
-        <li class="nav-item"><a class="nav-link" href="tsvgames.html">TSV Games (BETA)</a></li>
-                        <li class="nav-item"><a class="nav-link" href="member-panel.html">User Panel</a></li>
-        <li class="nav-item"><a class="nav-link" href="admin-login.html">Administrator</a></li>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" aria-current="page" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="tsvsuguan-auto.html">Suguan</a></li>
+                        <li class="nav-item"><a class="nav-link" href="tsvgames.html">TSV Games (BETA)</a></li>
+        <li class="nav-item"><a class="nav-link" href="member-panel.html">User Panel</a></li>
+                            <li class="nav-item"><a class="nav-link" href="inventory-report.html">Inventory</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin-login.html">Administrator</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
 <div class="container my-5 flex-grow-1">
-  <h2 class="text-center">Suguan ng TSV<br><small>Week 35</small></h2>
+  <h2 class="text-center">Suguan ng TSV<br><small>Week 36</small></h2>
   <div id="scheduleContainer"></div>
 </div>
 
-<footer>
-  <div class="container text-center">
-    <p class="footer-text mb-0">&copy; 2025 KuysDrew Web Development Inc. All rights reserved.</p>
-    <a href="privacy.html" class="btn btn-link text-decoration-none">Privacy Policy & Terms of Service</a>
-  </div>
-</footer>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
@@ -108,6 +186,15 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+ function showLoading() {
+      document.getElementById("loadingPopup").style.display = "flex";
+
+      // Example: Hide after 3 seconds (simulate loading)
+      setTimeout(() => {
+        document.getElementById("loadingPopup").style.display = "none";
+      }, 1000);
+    }
+
 // ✅ Restrict access
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -125,22 +212,22 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 const scheduleMap = {
-  "2025-08-27T06:00:00": "Miyerkules 6:00AM",
-  "2025-08-28T06:00:00": "Huwebes 6:00AM",
-  "2025-08-28T19:30:00": "Huwebes 7:30PM",
-  "2025-08-30T06:00:00": "Sabado 6:00AM",
-  "2025-08-31T06:00:00": "Linggo 6:00AM",
-  "2025-08-31T08:00:00": "PNK 8:00AM",
-  "2025-08-31T10:00:00": "Linggo 10:00AM"
+  "2025-09-03T06:00:00": "Miyerkules 6:00AM",
+  "2025-09-04T06:00:00": "Huwebes 6:00AM",
+  "2025-09-04T19:30:00": "Huwebes 7:30PM",
+  "2025-09-06T06:00:00": "Sabado 6:00AM",
+  "2025-09-07T06:00:00": "Linggo 6:00AM",
+  "2025-09-07T08:00:00": "PNK 8:00AM",
+  "2025-09-07T10:00:00": "Linggo 10:00AM"
 };
 
 const scheduleGroups = {
-    "MIDWEEK - PAGSAMBA": ["Miyerkules 6:00AM", "Huwebes 6:00AM", "Huwebes 7:30PM"],
+  "MIDWEEK - PAGSAMBA": ["Miyerkules 6:00AM", "Huwebes 6:00AM", "Huwebes 7:30PM"],
   "WEEKEND - PAGSAMBA": ["Sabado 6:00AM", "Linggo 6:00AM", "PNK 8:00AM", "Linggo 10:00AM"],
 };
 
 async function loadSchedules() {
-  const querySnapshot = await getDocs(collection(db, "wk35"));
+  const querySnapshot = await getDocs(collection(db, "wk36"));
   const scheduleContainer = document.getElementById("scheduleContainer");
   scheduleContainer.innerHTML = "";
 
@@ -184,17 +271,21 @@ async function loadSchedules() {
 }
 
 window.timeIn = async function(name) {
-  await updateDoc(doc(db, "wk35", name), { timeIn: new Date().toISOString() });
+  showLoading();
+  await updateDoc(doc(db, "wk36", name), { timeIn: new Date().toISOString() });
   loadSchedules();
 };
 window.timeOut = async function(name) {
-  await updateDoc(doc(db, "wk35", name), { timeOut: new Date().toISOString() });
+  showLoading();
+  await updateDoc(doc(db, "wk36", name), { timeOut: new Date().toISOString() });
   loadSchedules();
 };
+
+  fetch("footer.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("footer").innerHTML = data;
+    });
 </script>
 </body>
 </html>
-
-
-
-
