@@ -287,7 +287,7 @@ const scheduleGroups = {
 };
 
 async function loadSchedules() {
-  const querySnapshot = await getDocs(collection(db, "panata_wk36"));
+  const querySnapshot = await getDocs(collection(db, "panata_wk35"));
   const scheduleContainer = document.getElementById("scheduleContainer");
   scheduleContainer.innerHTML = "";
 
@@ -334,12 +334,12 @@ async function loadSchedules() {
 
 window.timeIn = async function(name) {
     showLoading();
-  await updateDoc(doc(db, "panata_wk36", name), { timeIn: new Date().toISOString() });
+  await updateDoc(doc(db, "panata_wk35", name), { timeIn: new Date().toISOString() });
   loadSchedules();
 };
 window.timeOut = async function(name) {
     showLoading();
-  await updateDoc(doc(db, "panata_wk36", name), { timeOut: new Date().toISOString() });
+  await updateDoc(doc(db, "panata_wk35", name), { timeOut: new Date().toISOString() });
   loadSchedules();
 };
 
